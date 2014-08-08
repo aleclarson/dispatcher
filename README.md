@@ -16,11 +16,11 @@ This wrapper aims to...
 
 ### Table of Contents
 
-[Dispatcher]()
+[Dispatcher](https://github.com/aleclarson/swift-dispatcher#dispatcher)
 
-[DispatchQueue]()
+[DispatchQueue](https://github.com/aleclarson/swift-dispatcher#dispatchqueue)
 
-[DispatchGroup]()
+[DispatchGroup](https://github.com/aleclarson/swift-dispatcher#dispatchgroup)
 
 -
 
