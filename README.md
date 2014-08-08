@@ -142,6 +142,16 @@ A `DispatchGroup` wraps around the traditional [`dispatch_group_t`](https://deve
 
 > Creates a `DispatchGroup` with a `count` equal to the passed `Int`. This is incredibly useful when you know exactly how many operations will be waited on.
 
+#### Operators
+
+`DispatchGroup += Int`
+
+> The equivalent of [`dispatch_group_enter()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW23) inside a for loop
+
+`DispatchGroup -= Int`
+
+> The equivalent of [`dispatch_group_leave()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW24) inside a for loop
+
 #### How to use
 
 ```Swift
