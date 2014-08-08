@@ -16,7 +16,7 @@ This wrapper aims to...
 
 ### Table of Contents
 
-[Dispatcher](https://github.com/aleclarson/swift-dispatcher#dispatcher)
+[Dispatcher](https://github.com/aleclarson/swift-dispatcher#dispatcher-1)
 
 [DispatchQueue](https://github.com/aleclarson/swift-dispatcher#dispatchqueue)
 
