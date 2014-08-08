@@ -10,6 +10,8 @@ This wrapper aims to...
 
 **3.** Use Swift magic when it makes sense
 
+**Disclaimer**: This wrapper does not provide everything that GCD does.
+
 -
 
 ### Table of Contents
