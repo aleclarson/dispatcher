@@ -14,7 +14,7 @@ gcd.async {
 }
 ```
 
-#### What is a DispatchQueue?
+#### What's a DispatchQueue?
 
 A `DispatchQueue` can execute closures in order (a.k.a. serially) or out of order (a.k.a. concurrently).
 
