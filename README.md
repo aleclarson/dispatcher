@@ -14,7 +14,7 @@ gcd.async {
 }
 ```
 
-### What is a `DispatchQueue`?
+#### What is a DispatchQueue?
 
 A `DispatchQueue` can execute closures in order (a.k.a. serially) or out of order (a.k.a. concurrently).
 
@@ -26,7 +26,7 @@ Use `async()` and `sync()` to add closures to a `DispatchQueue`.
 
 -
 
-### What `DispatchQueue`s already exist?
+#### What DispatchQueues already exist?
 
 These 5 queues are at your disposal...
 
@@ -42,7 +42,7 @@ These 5 queues are at your disposal...
 
 -
 
-### What `DispatchQueue` am I currently on?
+#### What DispatchQueue am I currently on?
 
 There are two ways to know which `DispatchQueue` you're currently on:
 
@@ -52,7 +52,7 @@ There are two ways to know which `DispatchQueue` you're currently on:
 
 -
 
-### How do I make my own `DispatchQueue`?
+#### How do I make my own DispatchQueue?
 
 Simply call `gcd.serial()` to make a serial `DispatchQueue`.
 
@@ -66,7 +66,7 @@ You **must** retain these yourself!
 
 -
 
-### Installation
+#### Installation
 
 **Dispatcher** is not yet available on CocoaPods.
 
