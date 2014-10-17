@@ -46,9 +46,9 @@ These 5 queues are at your disposal...
 
 There are two ways to know which `DispatchQueue` you're currently on:
 
-* `gcd.current`: Returns the `DispatchQueue` you're currently on.
+* `gcd.current`: Only available on `Dispatcher`.
 
-* `gcd.isCurrent`: A boolean property available on all `DispatchQueue`s.
+* `gcd.isCurrent`: Available on all `DispatchQueue`s.
 
 -
 
