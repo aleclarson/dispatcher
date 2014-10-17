@@ -1,6 +1,6 @@
 <img src="http://i.imgur.com/w30RRFf.jpg"/>
 
-**Dispatcher** takes the pain out of a chunk of [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html).
+**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html).
 
 ```Swift
 gcd.async {
