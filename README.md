@@ -62,7 +62,38 @@ You **must** retain these yourself!
 
 -
 
-*To be continued...*
+#### What's a DispatchGroup?
+
+A `DispatchGroup` keeps track of multiple related closures (specifically when all are finished).
+
+```Swift
+let group = DispatchGroup(1)
+
+gcd.async {
+
+  // do some work...
+  
+  --group
+}
+
+if someCondition {
+  
+  ++group
+  
+  gcd.async {
+    
+    // do some other work...
+    
+    --group
+  }
+}
+
+group.done {
+	
+  // do something when both are finished...
+}
+
+```
 
 -
 
