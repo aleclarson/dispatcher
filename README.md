@@ -1,179 +1,73 @@
-## Dispatcher
-
-Apple's [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html) deserves an API more suitable for Swift.
-
-This wrapper aims to...
-
-**1.** Be more concise
-
-**2.** Require less cognitive load to use
-
-**3.** Use Swift magic when it makes sense
-
-**Disclaimer**: This wrapper does not provide everything that GCD does.
-
--
-
-### Table of Contents
-
-[Dispatcher](https://github.com/aleclarson/swift-dispatcher#dispatcher-1)
-
-[DispatchQueue](https://github.com/aleclarson/swift-dispatcher#dispatchqueue)
-
-[DispatchGroup](https://github.com/aleclarson/swift-dispatcher#dispatchgroup)
-
--
-
-### Dispatcher
-
-The `Dispatcher` is a singleton for accessing various pre-defined `DispatchQueue`s. It's also easy to make your own serial or concurrent queues!
-
-You can't initialize your own `Dispatcher`. Instead, use `gcd`.
-
-#### Properties
-
-`let main: DispatchQueue`
-
-> The equivalent of [`dispatch_get_main_queue()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW11)
-
-`let global: DispatchQueue`
-
-> The equivalent of `dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)`
-
-`let background: DispatchQueue`
-
-> The equivalent of `dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)`
-
-`let high: DispatchQueue`
-
-> The equivalent of `dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)`
-
-`let low: DispatchQueue`
-
-> The equivalent of `dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)`
-
-#### Methods
-
-`func serial (id: String) -> DispatchQueue`
-
-> The equivalent of `dispatch_queue_create(id, DISPATCH_QUEUE_SERIAL)`
-
-`func concurrent (id: String) -> DispatchQueue`
-
-> The equivalent of `dispatch_queue_create(id, DISPATCH_QUEUE_CONCURRENT)`
-
--
-
-### DispatchQueue
-
-A `DispatchQueue` wraps around the traditional [`dispatch_queue_t`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH102-SW8).
-
-To initialize your own `DispatchQueue`, you must use `gcd.serial("name")` or `gcd.concurrent("name")`.
-
-#### Properties
-
-`let id: String`
-
-> The unique identifier
-
-`let q: dispatch_queue_t`
-
-> A reference to the underlying `dispatch_queue_t` in case you need to pass it somewhere
-
-#### Methods
-
-`func async (block: () -> ())`
-
-> The equivalent of [`dispatch_async()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW7)
-
-`func sync (block: () -> ())`
-
-> The equivalent of [`dispatch_sync()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW17)
-
-#### How to use
-
-Get back to the main thread.
+**Dispatcher** takes the pain out of [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html) (at least some parts of it).
 
 ```Swift
-gcd.main.sync {
-  // code goes here
+gcd.async {
+	
+	// do something that takes time...
+
+	gcd.main.sync {
+
+		// update the user interface...
+	}
 }
 ```
 
-If only a single thing needs to be performed, you can take advantage of Swift's `@autoclosure`.
+### What is a `DispatchQueue`?
 
-```Swift
-gcd.global.async(myClass.doLongOperation("http://sutura.io/wp-content/uploads/2014/08/Aug8th-techweekly.jpg", true))
-```
+A `DispatchQueue` can execute closures in order (a.k.a. serially) or out of order (a.k.a. concurrently).
 
-Create your own `DispatchQueue`. You'll need to retain these ones yourself.
+Use `async()` and `sync()` to add closures to a `DispatchQueue`.
 
-```Swift
-let myQueue = gcd.concurrent("camera")
-```
+* `async()` returns **before** the closure you pass it is done executing.
+
+* `sync()` returns **after** the closure you pass it is done executing.
 
 -
 
-### DispatchGroup
+### What `DispatchQueue`s already exist?
 
-A `DispatchGroup` wraps around the traditional [`dispatch_group_t`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH102-SW3).
+These 5 queues are at your disposal...
 
-#### Properties
+* `gcd`: The `Dispatcher` singleton. The concurrent `DispatchQueue` for default-priority tasks.
 
-`let count: Int`
+* `gcd.main`: The serial `DispatchQueue` where all your UI magic takes place.
 
-> The number of operations still running in the `DispatchGroup`
+* `gcd.high`: The concurrent `DispatchQueue` for high-priority tasks.
 
+* `gcd.low`: The concurrent `DispatchQueue` for low-priority tasks.
 
-#### Methods
-
-`func onFinish (block: () -> ())`
-
-> Supply the block to be executed when the `DispatchGroup` is finished (a.k.a. when `count` reaches zero)
-
-
-#### Constructors
-
-`init ()`
-
-> Creates a `DispatchGroup` with a `count` equal to `0`.
-
-`convenience init (_ count: Int)`
-
-> Creates a `DispatchGroup` with a `count` equal to the passed `Int`. This is incredibly useful when you know exactly how many operations will be waited on.
-
-#### Operators
-
-`DispatchGroup += Int`
-
-> The equivalent of [`dispatch_group_enter()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW23) inside a for loop
-
-`DispatchGroup -= Int`
-
-> The equivalent of [`dispatch_group_leave()`](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html#//apple_ref/doc/uid/TP40008079-CH2-SW24) inside a for loop
-
-#### How to use
-
-```Swift
-let group = DispatchGroup(2)
-
-loadUserInfo(onFinish: {
-  // ...
-  
-  group -= 1
-})
-
-loadFriends(onFinish: {
-  // ...
-  
-  group -= 1
-})
-
-group.onFinish {
-  println("Successfully loaded user info AND friends!")
-}
-```
+* `gcd.background`: The concurrent `DispatchQueue` for no-priority tasks.
 
 -
 
-Crafted by Alec Larson
+### What `DispatchQueue` am I currently on?
+
+There are two ways to know which `DispatchQueue` you're currently on:
+
+* `gcd.current`: Returns the `DispatchQueue` you're currently on.
+
+* `gcd.isCurrent`: A boolean property available on all `DispatchQueue`s.
+
+-
+
+### How do I make my own `DispatchQueue`?
+
+Simply call `gcd.serial()` to make a serial `DispatchQueue`.
+
+And call `gcd.concurrent()` to make a concurrent `DispatchQueue`.
+
+You **must** retain these yourself!
+
+-
+
+*To be continued...*
+
+-
+
+### Installation
+
+**Dispatcher** is not yet available on CocoaPods.
+
+In the meantime, drag-and-drop the `Dispatcher.xcodeproj` into your own Xcode project. In your application target's **Build Phases**, add `Dispatcher.framework` to **Target Dependencies**, **Link Binary With Libraries**, and **Copy Files**.
+
+If that gives you trouble, open the `Dispatcher.xcodeproj` in Xcode and build the framework target. Right-click `Dispatcher.framework` in the **Products** folder in your **Project Navigator** and click **Show in Finder**. Drag-and-drop the `Dispatcher.framework` from your finder into your Xcode project.
