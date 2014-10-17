@@ -42,7 +42,7 @@ These 5 queues are at your disposal...
 
 -
 
-#### What DispatchQueue am I currently on?
+#### Which DispatchQueue am I currently on?
 
 There are two ways to know which `DispatchQueue` you're currently on:
 
