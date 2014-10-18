@@ -1,29 +1,23 @@
 
+import Dispatch
+
 public prefix func ++ (group: DispatchGroup) {
-  ++group.tasksRemaining
+  dispatch_group_enter(group.dispatch_group)
 }
 
 public prefix func -- (group: DispatchGroup) {
-  if group.tasksRemaining == 0 { return }
-  --group.tasksRemaining
-  ++group.tasksCompleted
-  if group.tasksRemaining == 0 { group.onDone?() }
+  dispatch_group_leave(group.dispatch_group)
 }
 
 public class DispatchGroup {
 
-  public private(set) var tasksRemaining: Int
-  
-  public private(set) var tasksCompleted = 0
+  public let dispatch_group = dispatch_group_create()
   
   public init (_ tasks: Int = 0) {
-    tasksRemaining = tasks
+    for _ in 0..<tasks { ++self }
   }
   
   public func done (handler: Void -> Void) {
-    if tasksRemaining > 0 { onDone = handler }
-    else { handler() }
+    dispatch_group_notify(dispatch_group, gcd.current.dispatch_queue, handler)
   }
-  
-  var onDone: (Void -> Void)?
 }
