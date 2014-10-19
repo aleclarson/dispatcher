@@ -72,7 +72,7 @@ A `Group` watches two or more concurrent tasks.
 
 If all tasks complete, the closure you pass to `done()` is called. 
 
-If all tasks fail to complete in `x` seconds, the closure you pass to `wait()` is called.
+If any task fails to complete in `x` seconds, the closure you pass to `wait()` is called.
 
 This class **is** thread-safe!
 
@@ -116,6 +116,8 @@ group.wait(1) {
 A `Timer` calls a closure after `x` seconds go by.
 
 If you do not call `autorelease()`, you **must** retain a `Timer` yourself.
+
+This class **is** thread-safe!
 
 ```Swift
 let timer = Timer(0.5) {
