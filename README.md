@@ -1,6 +1,8 @@
-<img src="http://i.imgur.com/w30RRFf.jpg"/>
+<img src="http://i.imgur.com/sEM1zbl.jpg"/>
 
-**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html).
+**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html). 
+
+It introduces 4 classes: `Dispatcher`, `Queue`, `Group`, and `Timer`.
 
 ```Swift
 gcd.async {
@@ -124,7 +126,7 @@ timer.repeat(2) // repeat twice
 
 timer.repeat() // repeat until stopped
 
-timer.stop() // stops the Timer immediately
+timer.stop() // stops the Timer immediately. alternatively, you could just set it to nil if the variable is an Optional
 
 timer.fire() // completes the Timer immediately (only if not stopped)
 ```
@@ -136,9 +138,12 @@ class MyClass {
   var timer: Timer!
   func doSomething () {}
   init () {
-    timer = Timer(1, doSomething) // this will cause a reference cycle
-    timer = Timer(1) { [unowned self] in self.doSomething() } // this prevents a reference cycle
-    timer = Timer(1, doSomething()) // so does this!
+    
+    timer = Timer(1, doSomething) // this will cause a reference cycle!!!
+    
+    timer = Timer(1) { [unowned self] in self.doSomething() } // this prevents a reference cycle using a capture list.
+    
+    timer = Timer(1, doSomething()) // and this prevents a reference cycle using an autoclosure.
   }
 }
 ```
