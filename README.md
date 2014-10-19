@@ -126,7 +126,7 @@ timer.repeat(2) // repeat twice
 
 timer.repeat() // repeat until stopped
 
-timer.stop() // stops the Timer immediately
+timer.stop() // stops the Timer immediately. alternatively, you could just set it to nil if the variable is an Optional
 
 timer.fire() // completes the Timer immediately (only if not stopped)
 ```
