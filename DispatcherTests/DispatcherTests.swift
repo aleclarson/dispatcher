@@ -25,15 +25,19 @@ class DispatcherTests: XCTestCase {
     queue.sync { XCTAssert(++calls == 3) }
   }
 
-  func testDispatchGroup () {
+  func testSyncInSync () {
+    var n = 0
+
+    gcd.main.sync(gcd.main.sync(n += 1))
+
+    XCTAssert(n == 1)
+  }
+
+  func testAsyncInAsync () {
     let expectation = expectationWithDescription(nil)
 
-    let group = DispatchGroup(1)
-    ++group
-    gcd.async { --group }
-    group.done(expectation.fulfill)
-    --group
+    gcd.main.async(gcd.main.async(expectation.fulfill()))
 
-    waitForExpectationsWithTimeout(2) { XCTAssertNil($0) }
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 }

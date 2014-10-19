@@ -1,6 +1,8 @@
 
 import Foundation
 
+public typealias Queue = DispatchQueue
+
 public class DispatchQueue {
 
   // MARK: Public
@@ -9,9 +11,36 @@ public class DispatchQueue {
 
   public var isCurrent: Bool { return dispatch_get_specific(&kCurrentQueue) == getMutablePointer(self) }
 
-  public func async (block: Void -> Void) { enqueue(dispatch_async, block) }
+  public func async (callback: Void -> Void) {
+    dispatch_async(dispatch_queue) { callback() }
+  }
   
-  public func sync (block: Void -> Void) { enqueue(dispatch_sync, block) }
+  public func sync (callback: Void -> Void) {
+    if isCurrent { callback(); return } // prevent deadlocks!
+    dispatch_sync(dispatch_queue) { callback() }
+  }
+
+  public func async <T> (callback: T -> Void) -> T -> Void {
+    return { [weak self] value in
+      if self == nil { return }
+      self!.async { callback(value) }
+    }
+  }
+
+  public func sync <T> (callback: T -> Void) -> T -> Void {
+    return { [weak self] value in
+      if self == nil { return }
+      self!.sync { callback(value) }
+    }
+  }
+
+  public func async (callback: @autoclosure () -> Void) {
+    async { callback() }
+  }
+
+  public func sync (callback: @autoclosure () -> Void) {
+    sync { callback() }
+  }
 
   public let dispatch_queue: dispatch_queue_t
 
@@ -32,13 +61,8 @@ public class DispatchQueue {
   
   init (_ concurrent: Bool) {
     isConcurrent = concurrent
-    dispatch_queue = dispatch_queue_create(NSUUID().UUIDString, isConcurrent ? DISPATCH_QUEUE_CONCURRENT : DISPATCH_QUEUE_SERIAL)
+    dispatch_queue = dispatch_queue_create(nil, isConcurrent ? DISPATCH_QUEUE_CONCURRENT : DISPATCH_QUEUE_SERIAL)
     remember()
-  }
-  
-  func enqueue (dispatcher: (dispatch_queue_t, dispatch_block_t) -> Void, _ block: Void -> Void) {
-    if isCurrent { return block() }
-    dispatcher(dispatch_queue, block)
   }
 
   func remember () {
