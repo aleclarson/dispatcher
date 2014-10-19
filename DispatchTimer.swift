@@ -7,7 +7,7 @@ public typealias Timer = DispatchTimer
 public class DispatchTimer {
 
   public convenience init (_ delay: CGFloat, _ callback: @autoclosure () -> Void) {
-    self.init(delay, { let _ = callback() })
+    self.init(delay, { callback() })
   }
   
   public convenience init (_ delay: CGFloat, _ callback: Void -> Void) {
