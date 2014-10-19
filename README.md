@@ -18,7 +18,7 @@ gcd.async {
 
 ### Queue
 
-A `Queue` can execute closures serially (in order) or concurrently (possibly out of order).
+A `Queue` executes closures you give it. It can do this either serially (in order) or concurrently (possibly out of order). Check the `isConcurrent` property on any `Queue` to know.
 
 To add a closure to a `Queue`, pass it to `async()` or `sync()`.
 
