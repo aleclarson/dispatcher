@@ -54,4 +54,27 @@ class DispatchTimerTests: XCTestCase {
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }
+
+  func testAutoReleasedTimer () {
+    let expectation = expectationWithDescription(nil)
+
+    DispatchTimer(0.5, expectation.fulfill()).autorelease()
+
+    waitForExpectationsWithTimeout(1, handler: nil)
+  }
+
+  func testUnretainedTimer () {
+    DispatchTimer(0.1, calls += 1)
+    timer = DispatchTimer(0.2, XCTAssert(calls == 0))
+  }
+
+  func testThreadSafety () {
+    let expectation = expectationWithDescription(nil)
+
+    gcd.async {
+      self.timer = Timer(0.5, gcd.main.sync(expectation.fulfill()))
+    }
+
+    waitForExpectationsWithTimeout(1, handler: nil)
+  }
 }

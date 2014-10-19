@@ -49,6 +49,11 @@ public class DispatchTimer {
     isRepeating = true
     repeatsLeft = times != nil ? Int(times) : -1
   }
+
+  public func autorelease () {
+    isAutoReleased = true
+    autoReleasedTimers[ObjectIdentifier(self)] = self
+  }
   
   public func fire () {
     if OSAtomicAnd32OrigBarrier(1, &invalidated) == 1 { return }
@@ -60,6 +65,7 @@ public class DispatchTimer {
   public func stop () {
     if OSAtomicTestAndSetBarrier(7, &invalidated) { return }
     queue.sync(dispatch_source_cancel(timer))
+    if isAutoReleased { autoReleasedTimers[ObjectIdentifier(self)] = nil }
   }
 
 
@@ -72,9 +78,15 @@ public class DispatchTimer {
 
   var invalidated: UInt32 = 0
 
+  var isAutoReleased = false
+
   var isRepeating = false
 
   var repeatsLeft = 0
 
-  deinit { stop() }
+  deinit {
+    if !isAutoReleased { stop() }
+  }
 }
+
+var autoReleasedTimers = [ObjectIdentifier:Timer]()
