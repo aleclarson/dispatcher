@@ -1,6 +1,8 @@
 <img src="http://i.imgur.com/sEM1zbl.jpg"/>
 
-**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html). It introduces 4 classes: `Dispatcher`, `Queue`, `Group`, and `Timer`.
+**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html). 
+
+It introduces 4 classes: `Dispatcher`, `Queue`, `Group`, and `Timer`.
 
 ```Swift
 gcd.async {
