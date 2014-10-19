@@ -138,9 +138,12 @@ class MyClass {
   var timer: Timer!
   func doSomething () {}
   init () {
-    timer = Timer(1, doSomething) // this will cause a reference cycle
-    timer = Timer(1) { [unowned self] in self.doSomething() } // this prevents a reference cycle
-    timer = Timer(1, doSomething()) // so does this!
+    
+    timer = Timer(1, doSomething) // this will cause a reference cycle!!!
+    
+    timer = Timer(1) { [unowned self] in self.doSomething() } // this prevents a reference cycle using a capture list.
+    
+    timer = Timer(1, doSomething()) // and this prevents a reference cycle using an autoclosure.
   }
 }
 ```
