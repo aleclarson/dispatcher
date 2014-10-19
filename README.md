@@ -115,12 +115,14 @@ group.wait(1) {
 
 A `Timer` calls a closure after `x` seconds go by.
 
-You **must** retain these yourself!
+If you do not call `autorelease()`, you **must** retain a `Timer` yourself.
 
 ```Swift
 let timer = Timer(0.5) {
   // do something after half a second passes...
 }
+
+timer.autorelease() // useful for fire-and-forget Timers
 
 timer.repeat(2) // repeat twice
 
