@@ -139,6 +139,7 @@
 				1123A3A319F1404E00BF890F /* Frameworks */,
 				1123A3A419F1404E00BF890F /* Headers */,
 				1123A3A519F1404E00BF890F /* Resources */,
+				1139E56819FBE29B00699A30 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -222,6 +223,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1139E56819FBE29B00699A30 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z \"`git branch`\" ]; then\n  git checkout -b unstable\nelse\n  git checkout unstable\nfi\n\ngit add --all\ngit commit -a -m \"`date +'Build on %F at %r'`\"\nexit 0";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1123A3A219F1404E00BF890F /* Sources */ = {
