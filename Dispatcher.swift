@@ -6,7 +6,14 @@ public let gcd = Dispatcher()
 public class Dispatcher : DispatchQueue {
 
   public var current: DispatchQueue {
-    return Unmanaged<DispatchQueue>.fromOpaque(COpaquePointer(dispatch_get_specific(&kCurrentQueue))).takeUnretainedValue()
+    let opaque = COpaquePointer(dispatch_get_specific(&kCurrentQueue))
+    return Unmanaged<DispatchQueue>.fromOpaque(opaque).takeUnretainedValue()
+  }
+
+  public var previous: DispatchQueue! {
+    let opaque = COpaquePointer(dispatch_get_specific(&kPreviousQueue))
+    if opaque == nil { return nil }
+    return Unmanaged<DispatchQueue>.fromOpaque(opaque).takeUnretainedValue()
   }
 
   public let main = DispatchQueue(dispatch_get_main_queue())
