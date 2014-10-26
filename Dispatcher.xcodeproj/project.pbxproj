@@ -235,8 +235,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z \"`git branch`\" ]; then\n  git checkout -b unstable\nelse\n  git checkout unstable\nfi\n\ngit add --all\ngit commit -a -m \"`date +'Build on %F at %r'`\"\nexit 0";
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\n. ~/scripts/xcode-commit-unstable.sh\nxcode-commit-unstable";
 		};
 /* End PBXShellScriptBuildPhase section */
 
