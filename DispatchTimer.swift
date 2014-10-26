@@ -23,6 +23,7 @@ public class DispatchTimer {
       return
     }
 
+    callbackQueue = gcd.current
     queue = gcd.serial()
     if !gcd.main.isCurrent { dispatch_set_target_queue(queue.dispatch_queue, gcd.current.dispatch_queue) }
     timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue.dispatch_queue)
@@ -39,7 +40,7 @@ public class DispatchTimer {
 
   public let tolerance: CGFloat
   
-  public let callback: Void -> Void!
+  public let callback: Void -> Void
 
 
 
@@ -57,7 +58,7 @@ public class DispatchTimer {
   
   public func fire () {
     if OSAtomicAnd32OrigBarrier(1, &invalidated) == 1 { return }
-    callback()
+    callbackQueue.sync(callback)
     if isRepeating && repeatsLeft > 0 { repeatsLeft-- }
     if !isRepeating || repeatsLeft == 0 { stop() }
   }
@@ -75,6 +76,8 @@ public class DispatchTimer {
   let timer: dispatch_source_t!
 
   let queue: DispatchQueue!
+
+  var callbackQueue: DispatchQueue!
 
   var invalidated: UInt32 = 0
 
