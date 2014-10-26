@@ -23,6 +23,30 @@ class DispatchTimerTests: XCTestCase {
     waitForExpectationsWithTimeout(1.1, handler: nil)
   }
 
+  func testCallbackQueue () {
+    let e = expectationWithDescription(nil)
+    
+    gcd.async {
+      self.timer = DispatchTimer(0.1) {
+        XCTAssert(gcd.isCurrent)
+        e.fulfill()
+      }
+    }
+
+    waitForExpectationsWithTimeout(0.3, handler: nil)
+  }
+
+  func testFire () {
+  
+    timer = DispatchTimer(1, calls += 1)
+
+    timer.fire()
+
+    timer.fire() // Should not do anything.
+
+    XCTAssert(calls == 1)
+  }
+
   func testFiniteRepeatingTimer () {
     let expectation = expectationWithDescription(nil)
 
