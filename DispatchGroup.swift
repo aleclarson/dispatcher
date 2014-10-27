@@ -18,7 +18,7 @@ public class DispatchGroup {
     dispatch_group_notify(dispatch_group, gcd.current.dispatch_queue, callback)
   }
 
-  public func wait (delay: CGFloat, _ callback: Void -> Void) {
+  public func wait (delay: Seconds, _ callback: Void -> Void) {
     dispatch_group_wait(dispatch_group, dispatch_time(DISPATCH_TIME_NOW, Int64(delay * CGFloat(NSEC_PER_SEC))))
   }
 
