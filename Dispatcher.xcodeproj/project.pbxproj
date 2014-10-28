@@ -236,7 +236,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = ". ~/scripts/xcode-build-bump.bash\n. ~/scripts/xcode-commit-unstable.bash\nxcode-commit-unstable \"`xcode-build-bump ${INFOPLIST_FILE}`\"";
+			shellScript = ". ~/scripts/build-number.bash\n. ~/scripts/commit-unstable.bash\n. ~/scripts/is-repo-clean.bash\n\nif [ \"`is-repo-clean`\" = \"false\" ]; then\n  commit-unstable \"`build-number ${INFOPLIST_FILE} --bump`\"\nfi\n\nexit 0";
 		};
 /* End PBXShellScriptBuildPhase section */
 
