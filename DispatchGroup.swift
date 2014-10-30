@@ -21,8 +21,6 @@ public class DispatchGroup {
   public func wait (delay: Seconds, _ callback: Void -> Void) {
     dispatch_group_wait(dispatch_group, dispatch_time(DISPATCH_TIME_NOW, Int64(delay * CGFloat(NSEC_PER_SEC))))
   }
-
-  deinit { assert(tasks == 0, "A DispatchGroup cannot be deallocated when tasks is greater than zero!") }
 }
 
 public prefix func ++ (group: DispatchGroup) {
