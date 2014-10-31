@@ -7,7 +7,7 @@ public typealias Group = DispatchGroup
 public class DispatchGroup {
 
   public init (_ tasks: Int = 0) {
-    for _ in 0..<tasks { ++self }
+    for _ in 0..<tasks { self++ }
   }
 
   public private(set) var tasks = 0
@@ -23,24 +23,16 @@ public class DispatchGroup {
   }
 }
 
-public prefix func ++ (group: DispatchGroup) {
+public postfix func ++ (group: DispatchGroup) {
   objc_sync_enter(group)
   group.tasks++
   dispatch_group_enter(group.dispatch_group)
   objc_sync_exit(group)
 }
 
-public prefix func -- (group: DispatchGroup) {
+public postfix func -- (group: DispatchGroup) {
   objc_sync_enter(group)
   group.tasks--
   dispatch_group_leave(group.dispatch_group)
   objc_sync_exit(group)
-}
-
-public postfix func ++ (group: DispatchGroup) {
-  ++group
-}
-
-public postfix func -- (group: DispatchGroup) {
-  --group
 }
