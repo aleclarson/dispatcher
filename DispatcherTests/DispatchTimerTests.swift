@@ -102,7 +102,7 @@ class DispatchTimerTests: XCTestCase {
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
-  func testPrecision () {
+  func testAccuracy () {
     let e = expectationWithDescription(nil)
     let startTime = CFAbsoluteTimeGetCurrent()
     let expectedDelay: CFAbsoluteTime = 0.3
