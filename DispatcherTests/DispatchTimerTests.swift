@@ -106,12 +106,12 @@ class DispatchTimerTests: XCTestCase {
     let e = expectationWithDescription(nil)
     let startTime = CFAbsoluteTimeGetCurrent()
     let expectedDelay: CFAbsoluteTime = 0.3
-    timer = Timer(Seconds(expectedDelay)) {
+    timer = Timer(Seconds(expectedDelay), gcd.async {
       let actualDelay = CFAbsoluteTimeGetCurrent() - startTime
       println("actualDelay = \(actualDelay)")
       XCTAssert(actualDelay == expectedDelay)
       e.fulfill()
-    }
+    })
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 }
