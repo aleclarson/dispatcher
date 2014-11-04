@@ -103,12 +103,15 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testPrecision () {
+    let e = expectationWithDescription(nil)
     let startTime = CFAbsoluteTimeGetCurrent()
     let expectedDelay: CFAbsoluteTime = 0.3
     timer = Timer(Seconds(expectedDelay)) {
       let actualDelay = CFAbsoluteTimeGetCurrent() - startTime
       println("actualDelay = \(actualDelay)")
       XCTAssert(actualDelay == expectedDelay)
+      e.fulfill()
     }
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 }
