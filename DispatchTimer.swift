@@ -60,6 +60,7 @@ public class DispatchTimer {
   
   public func fire () {
     if OSAtomicAnd32OrigBarrier(1, &invalidated) == 1 { return }
+    println("Firing Timer.")
     callbackQueue.sync(callback)
     if isRepeating && repeatsLeft > 0 { repeatsLeft-- }
     if !isRepeating || repeatsLeft == 0 { stop() }
