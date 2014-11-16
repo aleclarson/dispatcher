@@ -67,6 +67,7 @@ public class DispatchTimer {
   
   public func stop () {
     if OSAtomicTestAndSetBarrier(7, &invalidated) { return }
+    println("Stopping Timer.")
     queue.sync(dispatch_source_cancel(timer))
     if isAutoReleased { autoReleasedTimers[ObjectIdentifier(self)] = nil }
   }
