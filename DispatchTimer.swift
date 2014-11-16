@@ -92,6 +92,7 @@ public class DispatchTimer {
 
   deinit {
     if !isAutoReleased { stop() }
+    println("Timer.deinit")
   }
 }
 
