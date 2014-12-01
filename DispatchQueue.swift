@@ -12,12 +12,10 @@ public class DispatchQueue {
   public var isCurrent: Bool { return dispatch_get_specific(&kCurrentQueue) == getMutablePointer(self) }
 
   public func async (callback: Void -> Void) {
-    updatePreviousQueue()
     dispatch_async(dispatch_queue) { callback() }
   }
   
   public func sync (callback: Void -> Void) {
-    updatePreviousQueue()
     _sync(callback)
   }
 
@@ -84,10 +82,6 @@ public class DispatchQueue {
     dispatch_queue_set_specific(dispatch_queue, &kCurrentQueue, getMutablePointer(self), nil)
   }
 
-  func updatePreviousQueue () {
-    dispatch_queue_set_specific(dispatch_queue, &kPreviousQueue, getMutablePointer(gcd.current), nil)
-  }
-
   func _sync (callback: Void -> Void) {
     if isCurrent { callback(); return } // prevent deadlocks!
     dispatch_sync(dispatch_queue) { callback() }
@@ -95,8 +89,6 @@ public class DispatchQueue {
 }
 
 var kCurrentQueue = 0
-
-var kPreviousQueue = 0
 
 func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
   return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
