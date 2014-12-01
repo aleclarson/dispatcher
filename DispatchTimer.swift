@@ -27,7 +27,7 @@ public class DispatchTimer {
 
     _callbackQueue = gcd.current
     _queue = gcd.high
-    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _queue.dispatch_queue)
+    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _queue.wrapped)
     let delay_ns = delay * Seconds(NSEC_PER_SEC)
     let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay_ns))
     dispatch_source_set_timer(_timer, time, UInt64(delay_ns), UInt64(tolerance * Seconds(NSEC_PER_SEC)))

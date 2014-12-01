@@ -15,7 +15,7 @@ public class DispatchGroup {
   public let dispatch_group = dispatch_group_create()
   
   public func done (callback: Void -> Void) {
-    dispatch_group_notify(dispatch_group, gcd.current.dispatch_queue, callback)
+    dispatch_group_notify(dispatch_group, gcd.current.wrapped, callback)
   }
 
   public func wait (delay: Seconds, _ callback: Void -> Void) {
