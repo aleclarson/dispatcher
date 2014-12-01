@@ -26,5 +26,7 @@ public class Dispatcher : DispatchQueue {
     return DispatchQueue(true)
   }
 
-  init () { super.init(DISPATCH_QUEUE_PRIORITY_DEFAULT) }
+  init () {
+    super.init(DISPATCH_QUEUE_PRIORITY_DEFAULT)
+  }
 }
