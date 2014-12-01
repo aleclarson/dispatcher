@@ -16,7 +16,8 @@ public class DispatchQueue {
   }
   
   public func sync (callback: Void -> Void) {
-    _sync(callback)
+    if isCurrent { return callback() } // prevent deadlocks!
+    dispatch_sync(dispatch_queue) { callback() }
   }
 
   public func async <T> (callback: T -> Void) -> T -> Void {
@@ -80,11 +81,6 @@ public class DispatchQueue {
 
   func updateCurrentQueue () {
     dispatch_queue_set_specific(dispatch_queue, &kCurrentQueue, getMutablePointer(self), nil)
-  }
-
-  func _sync (callback: Void -> Void) {
-    if isCurrent { callback(); return } // prevent deadlocks!
-    dispatch_sync(dispatch_queue) { callback() }
   }
 }
 
