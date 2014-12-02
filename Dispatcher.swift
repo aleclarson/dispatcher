@@ -5,7 +5,6 @@ public let gcd = Dispatcher()
 
 public class Dispatcher : DispatchQueue {
 
-  /// Not guarenteed to be non-nil.
   public var current: DispatchQueue! {
     let queue = dispatch_get_specific(&kCurrentQueue)
     if queue == nil { return nil }
