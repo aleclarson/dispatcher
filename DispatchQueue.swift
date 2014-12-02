@@ -11,13 +11,15 @@ public class DispatchQueue {
 
   public var isCurrent: Bool { return dispatch_get_specific(&kCurrentQueue) == getMutablePointer(self) }
 
+  /// Calls the callback asynchronously on this queue.
   public func async (callback: Void -> Void) {
     dispatch_async(wrapped) { callback() }
   }
-  
+
+  /// If this queue is the current queue, the callback is called immediately.
+  /// Else, the callback is called synchronously on this queue.
   public func sync (callback: Void -> Void) {
-    if isCurrent { return callback() } // prevent deadlocks!
-    dispatch_sync(wrapped) { callback() }
+    isCurrent ? callback() : dispatch_sync(wrapped, { callback() })
   }
 
   public func async <T> (callback: T -> Void) -> T -> Void {
@@ -34,12 +36,10 @@ public class DispatchQueue {
     }
   }
 
-  public func async (callback: @autoclosure () -> Void) {
-    async { callback() }
-  }
-
-  public func sync (callback: @autoclosure () -> Void) {
-    sync { callback() }
+  /// If this queue is the current queue, the callback is called immediately.
+  /// Else, the callback is called asynchronously on this queue.
+  public func jump (callback: Void -> Void) {
+    isCurrent ? callback() : async(callback)
   }
 
   public func suspend () {

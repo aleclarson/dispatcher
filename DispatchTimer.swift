@@ -68,7 +68,7 @@ public class DispatchTimer {
   public func stop () {
     if _invalidated { return }
     _invalidated = true
-    _queue.sync(dispatch_source_cancel(_timer))
+    _queue.sync { dispatch_source_cancel(self._timer) }
     if _releasesItself { autoReleasedTimers[ObjectIdentifier(self)] = nil }
   }
 
