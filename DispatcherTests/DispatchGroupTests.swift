@@ -5,23 +5,23 @@ import Dispatcher
 
 class WorkTests: XCTestCase {
 
-  var group: Work!
+  var work: Work!
 
   override func tearDown() {
-    group = nil
+    work = nil
     super.tearDown()
   }
 
   func testWork () {
     let expectation = expectationWithDescription(nil)
 
-    group = Work()
+    work = Work()
 
-    group++
+    work++
 
-    group.done(expectation.fulfill)
+    work.done(expectation.fulfill)
 
-    group--
+    work--
 
     waitForExpectationsWithTimeout(1) { XCTAssertNil($0) }
   }
@@ -29,16 +29,16 @@ class WorkTests: XCTestCase {
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
-    group = Work(2)
+    work = Work(2)
 
     gcd.async {
-      self.group--
+      self.work--
       gcd.main.sync {
-        self.group--
+        self.work--
       }
     }
 
-    group.done(expectation.fulfill)
+    work.done(expectation.fulfill)
 
     waitForExpectationsWithTimeout(1) { XCTAssertNil($0) }
   }
