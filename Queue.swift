@@ -10,7 +10,8 @@ public class Queue {
   /// This can only be set if this Queue is serial and created by you.
   public var priority: Priority {
     willSet {
-      assert(!isGlobal && !isMain && isSerial)
+      assert(!isGlobal, "not allowed to set the priority of a global queue")
+      assert(!isMain, "not allowed to set the priority of the main queue")
     }
     didSet {
       var target: Queue!
@@ -37,20 +38,20 @@ public class Queue {
   public let isGlobal: Bool
 
   /// Calls the callback asynchronously on this queue.
-  public func async (callback: Void -> Void) {
-    dispatch_async(wrapped) { callback() }
+  public func async (block: Void -> Void) {
+    dispatch_async(wrapped) { block() }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called synchronously on this queue.
-  public func sync (callback: Void -> Void) {
-    isCurrent ? callback() : dispatch_sync(wrapped, { callback() })
+  public func sync (block: Void -> Void) {
+    isCurrent ? block() : dispatch_sync(wrapped) { block() }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called asynchronously on this queue.
-  public func csync (callback: Void -> Void) {
-    isCurrent ? callback() : async(callback)
+  public func csync (block: Void -> Void) {
+    isCurrent ? block() : async(block)
   }
 
   public func suspend () {
@@ -61,9 +62,12 @@ public class Queue {
     dispatch_resume(self.wrapped)
   }
 
-  public func barrier () {
-    assert(!isSerial)
-    fatalError("Unimplemented.")
+  /// Asynchronously submits a barrier block to this Queue.
+  public func barrier (block: Void -> Void) {
+    assert(!isSerial, "a barrier is pointless on a serial queue")
+    assert(!isGlobal, "a barrier cannot be used on a global queue")
+    assert(!isMain, "a barrier cannot be used on the main queue")
+    dispatch_barrier_async(wrapped, block)
   }
 
   public let wrapped: dispatch_queue_t
@@ -108,10 +112,10 @@ public class Queue {
   }
 
   /// Initializes a custom queue.
-  init (_ serial: Bool) {
+  init (_ serial: Bool, _ priority: Priority) {
     isSerial = serial
     isGlobal = false
-    priority = .Normal
+    self.priority = priority
     wrapped = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
 
     _register()

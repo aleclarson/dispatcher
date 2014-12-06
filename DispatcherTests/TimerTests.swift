@@ -5,7 +5,7 @@ import Dispatcher
 
 class TimerTests: XCTestCase {
 
-  var timer: Timer!
+  weak var timer: Timer!
   var calls = 0
   var view: UIView!
 
@@ -67,14 +67,6 @@ class TimerTests: XCTestCase {
     }
 
     timer.repeat()
-
-    waitForExpectationsWithTimeout(1, handler: nil)
-  }
-
-  func testAutoClosureTimer () {
-    let expectation = expectationWithDescription(nil)
-
-    timer = Timer(0.1) { expectation.fulfill() }
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }

@@ -27,13 +27,13 @@ public class Dispatcher : Queue {
   // MARK: Methods
 
   /// Creates a new Queue that executes one block at a time.
-  public func serial () -> Queue {
-    return Queue(true)
+  public func serial (_ priority: Priority = .Normal) -> Queue {
+    return Queue(true, priority)
   }
 
   /// Creates a new Queue that executes multiple blocks at once.
-  public func concurrent () -> Queue {
-    return Queue(false)
+  public func concurrent (_ priority: Priority = .Normal) -> Queue {
+    return Queue(false, priority)
   }
 
 

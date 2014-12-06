@@ -47,37 +47,42 @@ public class Timer {
   }
   
   public func fire () {
-    if _invalidated { return }
-    _callingThread.sync(callback)
+    if _isActive { return }
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
+    _callingThread.async(callback)
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
   }
   
   public func stop () {
-    if _invalidated { return }
-    _invalidated = true
+    if _isActive { return }
+    _isActive = true
     dispatch_source_cancel(_source)
     activeTimers[ObjectIdentifier(self)] = nil
   }
 
 
 
-  // MARK: Internal
+  // MARK: Private
 
-  let _source: dispatch_source_t!
-  var _callingThread: Thread!
-  var _callingQueue: Queue!
+  private let _source: dispatch_source_t!
 
-  var _shouldRepeat = false
-  var _remainingRepeats = 0
+  private var _callingThread: Thread!
 
-  var __invalidated = false
-  var _invalidated: Bool {
+  private var _callingQueue: Queue!
+
+  private var _shouldRepeat = false
+
+  private var _remainingRepeats = 0
+
+  // The backing store for `_isActive`
+  private var _active = false
+
+  private var _isActive: Bool {
     get {
-      return lock(self) { self.__invalidated }
+      return lock(self) { self._active }
     }
     set {
-      lock(self) { self.__invalidated = newValue }
+      lock(self) { self._active = newValue }
     }
   }
 }
@@ -85,10 +90,3 @@ public class Timer {
 let timerQueue = gcd
 
 var activeTimers = [ObjectIdentifier:Timer]()
-
-func lock <T> (obj: AnyObject, block: Void -> T) -> T {
-  objc_sync_enter(obj)
-  let value = block()
-  objc_sync_exit(obj)
-  return value
-}
