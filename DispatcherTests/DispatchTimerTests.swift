@@ -18,9 +18,9 @@ class TimerTests: XCTestCase {
   func testTimer () {
     let expectation = expectationWithDescription(nil)
 
-    timer = Timer(1, expectation.fulfill)
+    timer = Timer(0.1, expectation.fulfill)
 
-    waitForExpectationsWithTimeout(1.1, handler: nil)
+    waitForExpectationsWithTimeout(0.2, handler: nil)
   }
 
   func testCallbackQueue () {
@@ -33,7 +33,7 @@ class TimerTests: XCTestCase {
       }
     }
 
-    waitForExpectationsWithTimeout(0.3, handler: nil)
+    waitForExpectationsWithTimeout(0.2, handler: nil)
   }
 
   func testFire () {
