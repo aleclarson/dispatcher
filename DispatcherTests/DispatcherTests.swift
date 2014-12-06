@@ -15,21 +15,6 @@ class DispatcherTests: XCTestCase {
     gcd.sync { XCTAssert(gcd.main !== gcd.current) }
   }
 
-  func testDispatcherPrevious () {
-
-    let expectation = expectationWithDescription(nil)
-
-    gcd.async {
-      XCTAssert(gcd.previous === gcd.main)
-      gcd.main.sync {
-        XCTAssert(gcd.previous === gcd)
-        expectation.fulfill()
-      }
-    }
-
-    waitForExpectationsWithTimeout(0.5, handler: nil)
-  }
-
   func testSerialQueue () {
 
     var n = 0
@@ -43,13 +28,14 @@ class DispatcherTests: XCTestCase {
     queue.sync { XCTAssert(++n == 3) }
   }
 
+  // Ensure a deadlock does not occur when `Queue.sync()` is used when `Queue.isCurrent` is `true`.
   func testCurrentSync () {
 
     var n = 0
 
     XCTAssert(gcd.current === gcd.main)
 
-    gcd.main.sync(n += 1)
+    gcd.main.sync { n += 1 }
 
     XCTAssert(n == 1)
   }
@@ -62,7 +48,7 @@ class DispatcherTests: XCTestCase {
 
     q.suspend()
 
-    q.async(expectation.fulfill())
+    q.async { expectation.fulfill() }
 
     q.resume()
 
@@ -83,7 +69,11 @@ class DispatcherTests: XCTestCase {
 
     let expectation = expectationWithDescription(nil)
 
-    gcd.main.async(gcd.main.async(expectation.fulfill()))
+    gcd.main.async {
+      gcd.main.async {
+        expectation.fulfill()
+      }
+    }
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }

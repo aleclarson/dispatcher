@@ -38,7 +38,7 @@ class TimerTests: XCTestCase {
 
   func testFire () {
   
-    timer = Timer(1, calls += 1)
+    timer = Timer(1) { calls += 1 }
 
     timer.fire()
 
@@ -74,15 +74,7 @@ class TimerTests: XCTestCase {
   func testAutoClosureTimer () {
     let expectation = expectationWithDescription(nil)
 
-    timer = Timer(0.1, expectation.fulfill())
-
-    waitForExpectationsWithTimeout(1, handler: nil)
-  }
-
-  func testAutoReleasedTimer () {
-    let expectation = expectationWithDescription(nil)
-
-    Timer(0.5, expectation.fulfill()).autorelease()
+    timer = Timer(0.1) { expectation.fulfill() }
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }
