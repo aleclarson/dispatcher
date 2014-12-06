@@ -2,15 +2,9 @@
 import Foundation
 import UIKit
 
-public typealias Timer = DispatchTimer
-
 public typealias Seconds = CGFloat
 
-public class DispatchTimer {
-
-  public convenience init (_ delay: Seconds, _ callback: @autoclosure () -> Void) {
-    self.init(delay, { callback() })
-  }
+public class Timer {
   
   public convenience init (_ delay: Seconds, _ callback: Void -> Void) {
     self.init(delay, 0, callback)
@@ -25,14 +19,14 @@ public class DispatchTimer {
       return
     }
 
-    _callbackQueue = gcd.current
-    _queue = gcd.high
-    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _queue.wrapped)
-    let delay_ns = delay * Seconds(NSEC_PER_SEC)
-    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay_ns))
-    dispatch_source_set_timer(_timer, time, UInt64(delay_ns), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
-    dispatch_source_set_event_handler(_timer) { [weak self] in let _ = self?.fire() }
-    dispatch_resume(_timer)
+    _callingThread = currentThread
+    _callingQueue = gcd.current
+    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.wrapped)
+    dispatch_source_set_timer(_source, dispatch_walltime(nil, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
+    dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire() }
+    dispatch_resume(_source)
+
+    activeTimers[ObjectIdentifier(self)] = self
   }
 
 
@@ -51,16 +45,10 @@ public class DispatchTimer {
     _shouldRepeat = true
     _remainingRepeats = times != nil ? Int(times) : -1
   }
-
-  public func autorelease () {
-    if _invalidated { return }
-    _releasesItself = true
-    autoReleasedTimers[ObjectIdentifier(self)] = self
-  }
   
   public func fire () {
     if _invalidated { return }
-    _callbackQueue.sync(callback)
+    _callingThread.sync(callback)
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
   }
@@ -68,19 +56,17 @@ public class DispatchTimer {
   public func stop () {
     if _invalidated { return }
     _invalidated = true
-    _queue.sync { dispatch_source_cancel(self._timer) }
-    if _releasesItself { autoReleasedTimers[ObjectIdentifier(self)] = nil }
+    dispatch_source_cancel(_source)
+    activeTimers[ObjectIdentifier(self)] = nil
   }
 
 
 
   // MARK: Internal
 
-  let _timer: dispatch_source_t!
-  let _queue: DispatchQueue!
-  var _callbackQueue: DispatchQueue!
-
-  var _releasesItself = false
+  let _source: dispatch_source_t!
+  var _callingThread: Thread!
+  var _callingQueue: Queue!
 
   var _shouldRepeat = false
   var _remainingRepeats = 0
@@ -94,14 +80,11 @@ public class DispatchTimer {
       lock(self) { self.__invalidated = newValue }
     }
   }
-
-
-  deinit {
-    if !_releasesItself { stop() }
-  }
 }
 
-var autoReleasedTimers = [ObjectIdentifier:Timer]()
+let timerQueue = gcd
+
+var activeTimers = [ObjectIdentifier:Timer]()
 
 func lock <T> (obj: AnyObject, block: Void -> T) -> T {
   objc_sync_enter(obj)

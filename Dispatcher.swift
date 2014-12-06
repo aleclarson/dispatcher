@@ -1,33 +1,46 @@
 
 import Dispatch
 
+/// A default-priority Queue that also provides access to the main Queue, 
+/// the 3 global Queues, and the ability to create your own Queues.
 public let gcd = Dispatcher()
 
-public class Dispatcher : DispatchQueue {
+public class Dispatcher : Queue {
 
-  public var current: DispatchQueue! {
-    let queue = dispatch_get_specific(&kCurrentQueue)
+  /// Returns `nil` if the current Thread was not created by a Queue; normally this doesn't happen.
+  public var current: Queue! {
+    let queue = dispatch_get_specific(&kQueueCurrentKey)
     if queue == nil { return nil }
-    return Unmanaged<DispatchQueue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue()
+    return Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue()
   }
 
-  public let main = DispatchQueue(dispatch_get_main_queue())
+  public let main = Queue()
 
-  public let high = DispatchQueue(DISPATCH_QUEUE_PRIORITY_HIGH)
+  public let high = Queue(DISPATCH_QUEUE_PRIORITY_HIGH)
 
-  public let low = DispatchQueue(DISPATCH_QUEUE_PRIORITY_LOW)
+  public let low = Queue(DISPATCH_QUEUE_PRIORITY_LOW)
 
-  public let background = DispatchQueue(DISPATCH_QUEUE_PRIORITY_BACKGROUND)
+  public let background = Queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND)
 
-  public func serial () -> DispatchQueue {
-    return DispatchQueue(false)
+
+
+  // MARK: Methods
+
+  /// Creates a new Queue that executes one block at a time.
+  public func serial () -> Queue {
+    return Queue(true)
   }
 
-  public func concurrent () -> DispatchQueue {
-    return DispatchQueue(true)
+  /// Creates a new Queue that executes multiple blocks at once.
+  public func concurrent () -> Queue {
+    return Queue(false)
   }
 
-  init () {
+
+
+  // MARK: Private
+
+  private override init () {
     super.init(DISPATCH_QUEUE_PRIORITY_DEFAULT)
   }
 }

@@ -5,7 +5,7 @@ import Dispatcher
 
 class DispatcherTests: XCTestCase {
 
-  func testDispatchQueueIsCurrent () {
+  func testQueueIsCurrent () {
     XCTAssert(!gcd.isCurrent)
     gcd.sync { XCTAssert(gcd.isCurrent) }
   }
@@ -30,7 +30,7 @@ class DispatcherTests: XCTestCase {
     waitForExpectationsWithTimeout(0.5, handler: nil)
   }
 
-  func testSerialDispatchQueue () {
+  func testSerialQueue () {
 
     var n = 0
 

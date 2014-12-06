@@ -3,19 +3,19 @@ import UIKit
 import XCTest
 import Dispatcher
 
-class DispatchGroupTests: XCTestCase {
+class WorkTests: XCTestCase {
 
-  var group: DispatchGroup!
+  var group: Work!
 
   override func tearDown() {
     group = nil
     super.tearDown()
   }
 
-  func testDispatchGroup () {
+  func testWork () {
     let expectation = expectationWithDescription(nil)
 
-    group = DispatchGroup()
+    group = Work()
 
     group++
 
@@ -29,7 +29,7 @@ class DispatchGroupTests: XCTestCase {
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
-    group = DispatchGroup(2)
+    group = Work(2)
 
     gcd.async {
       self.group--
