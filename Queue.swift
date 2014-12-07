@@ -45,26 +45,7 @@ public class Queue {
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called synchronously on this queue.
   public func sync (closure: Void -> Void) {
-    if isCurrent { return closure() }
-
-    // Whether the current queue (or thread) is blocked.
-    let isCurrentBlocked = Queue.current?._blocked ?? Thread.current._blocked
-
-    isCurrentBlocked.write {
-      isBlocked in
-
-      // Ensure the current queue is not already blocked
-      assert(!isBlocked, "blocking a blocked queue causes a deadlock")
-
-      // Block the current queue
-      isBlocked = true
-    }
-
-    // Execute `closure` on this queue
-    dispatch_sync(core) { closure() }
-
-    // Unblock the current queue
-    isCurrentBlocked.value = false
+    isCurrent ? closure() : blockCurrentQueueOrThread { dispatch_sync(self.core, closure) }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
@@ -166,6 +147,8 @@ public class Queue {
 
   // MARK: Internal
 
+  let _blocked = Lock(false)
+
   /// Initializes one of Apple's built-in queues.
   init (_ priority: Priority) {
     self.priority = priority
@@ -187,8 +170,6 @@ public class Queue {
 
 
   // MARK: Private
-
-  private let _blocked = Lock(false)
 
   private func _register () {
     dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)

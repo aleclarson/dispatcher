@@ -19,30 +19,16 @@ public class Thread {
 
   // MARK: Methods
 
-  /// Pushes a block to be performed on this Thread.
-  /// This function always returns after the passed block finishes executing.
-  public func sync (block: Void -> Void) {
-    if isCurrent {
-      block()
-    }
-
-    else  {
-      _blocked.write {
-        isBlocked in
-        assert(!isBlocked, "blocking a blocked thread causes a deadlock")
-        isBlocked = true
-      }
-
-      perform(false, block)
-
-      _blocked.value = false
-    }
+  /// Pushes a closure to be performed on this Thread.
+  /// This function always returns after the passed closure finishes executing.
+  public func sync (closure: Void -> Void) {
+    isCurrent ? closure() : blockCurrentQueueOrThread { Task(self, false, closure); return }
   }
 
   /// Pushes a block to be performed on this Thread.
   /// This function typically returns before the passed block finishes executing.
   public func async (block: Void -> Void) {
-    perform(true, block)
+    Task(self, true, block)
   }
 
   /// Pushes a block to be performed on this Thread.
@@ -96,23 +82,56 @@ public class Thread {
     core = thread
   }
 
-  private func perform (asynchronous: Bool, _ block: Void -> Void) {
-    var task: Task!
-    task = Task { block(); task = nil }
-    core.callMethod("execute", target: task, asynchronous: asynchronous)
-  }
-
+  /// A closure waiting to be executed on any Thread
   private class Task : NSObject {
 
-    init (_ block: Void -> Void) {
-      task = block
+    init (_ thread: Thread, _ asynchronous: Bool, _ closure: Void -> Void) {
+
+      var task: Task! // retains `self` until `closure` is executed
+
+      self.closure = {
+        closure()
+        task = nil
+      }
+
       super.init()
+
+      task = self
+
+      thread.core.callMethod("execute", target: self, asynchronous: asynchronous)
     }
 
-    let task: Void -> Void
+    let closure: Void -> Void
 
-    @objc func execute () { task() }
+    var executed = false
+
+    @objc func execute () {
+      assert(!executed, "a task shouldn't execute more than once")
+      executed = true
+      closure()
+    }
+
+    deinit {
+      assert(executed, "a task shouldn't deallocate before it finishes")
+    }
   }
+}
+
+func blockCurrentQueueOrThread (closure: Void -> Void) {
+
+  let blocked = Queue.current?._blocked ?? Thread.current._blocked
+
+  blocked.write { blocked in
+    assert(!blocked, "blocking a blocked queue or thread causes a deadlock")
+
+    // Block the current queue/thread
+    blocked = true
+  }
+
+  closure()
+
+  // Unblock the current queue/thread
+  blocked.value = false
 }
 
 private var threadCache = [ObjectIdentifier:Thread]()
