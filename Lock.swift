@@ -1,39 +1,29 @@
 
-/// Synchronizes a resource across threads.
-/// All operations block each other.
-public class Lock {
+/// Synchronizes a value across Threads (including Queues).
+public class Lock<T> {
 
-  public func read <T> (block: Void -> T) -> T {
-    return lock(self, block)
+  public var value: T! {
+    get {
+      var value: T!
+      _queue.sync { value = self._value }
+      return value
+    }
+    set {
+      _write { self._value = newValue }
+    }
   }
 
-  public func write (block: Void -> Void) {
-    lock(self, block)
-  }
-}
-
-/// Synchronizes a resource across threads.
-/// Write operations block everyone.
-/// Read operations are concurrent.
-public class WriteLock : Lock {
-
-  public override func read <T> (block: Void -> T) -> T {
-    var value: T!
-    queue.sync { value = block() }
-    return value
+  /// If `serial` equals `true`, everything blocks everything.
+  /// If `serial` equals `false`, writes block everything, but reads are concurrent.
+  public init (_ defaultValue: T! = nil, _ serial: Bool = false) {
+    _queue = (serial ? gcd.serial : gcd.concurrent)(gcd.current.priority)
+    _write = serial ? _queue.sync : _queue.barrier
+    _value = defaultValue
   }
 
-  public override func write (block: Void -> Void) {
-    queue.barrier(block)
-  }
+  private let _write: (Void -> Void) -> Void
 
-  private let queue = gcd.concurrent(gcd.current.priority)
-}
+  private let _queue: Queue
 
-/// Lock a resource based on an object.
-public func lock <T> (obj: AnyObject, block: Void -> T) -> T {
-  objc_sync_enter(obj)
-  let value = block()
-  objc_sync_exit(obj)
-  return value
+  private var _value: T!
 }

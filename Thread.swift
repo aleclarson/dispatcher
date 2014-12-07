@@ -1,42 +1,49 @@
 
 import Foundation
 
-public var currentThread: Thread {
-  return Thread.wrap(NSThread.currentThread())
-}
-
-public var mainThread: Thread {
-  return Thread.wrap(NSThread.mainThread())
-}
-
 public class Thread {
 
   public var isCurrent: Bool {
-    return thread === NSThread.currentThread()
+    return core === NSThread.currentThread()
   }
 
   public var isMain: Bool {
-    return thread === NSThread.mainThread()
+    return core === NSThread.mainThread()
   }
 
-  /// Executes the given task synchronously,
-  /// returning after the task is completed.
-  public func sync (task: Void -> Void) {
-    isCurrent ? task() : Task(task).schedule(self, false)
+  public class var current: Thread {
+    return Thread.wrap(NSThread.currentThread())
   }
 
-  /// Executes the given task asynchronously,
-  /// returning before the task is completed (usually).
-  public func async (task: Void -> Void) {
-    Task(task).schedule(self, true)
+  public class var main: Thread {
+    return Thread.wrap(NSThread.mainThread())
   }
 
-  /// If this thread is the current thread, the given task
-  /// is executed synchronously. Otherwise, it's executed asynchronously.
-  public func csync (task: Void -> Void) {
-    isCurrent ? task() : async(task)
+
+
+  // MARK: Methods
+
+  /// Pushes a block to be performed on this Thread.
+  /// This function always returns after the passed block finishes executing.
+  public func sync (block: Void -> Void) {
+    isCurrent ? block() : perform(false, block)
   }
 
+  /// Pushes a block to be performed on this Thread.
+  /// This function typically returns before the passed block finishes executing.
+  public func async (block: Void -> Void) {
+    perform(true, block)
+  }
+
+  /// Pushes a block to be performed on this Thread.
+  /// If `isCurrent` is `true`, the passed block is called with `sync()`.
+  /// If `isCurrent` is `false`, the passed block is called with `async()`.
+  public func csync (block: Void -> Void) {
+    isCurrent ? block() : async(block)
+  }
+
+  /// Wraps an NSThread with a Thread and caches the result.
+  /// If the NSThread has been wrapped earlier, the cached result is used.
   public class func wrap (thread: NSThread) -> Thread {
     let id = ObjectIdentifier(thread)
 
@@ -49,45 +56,32 @@ public class Thread {
     return thread
   }
 
+
+
   // MARK: Private
 
-  private let thread: NSThread
-
-  private var tasks = [ObjectIdentifier:Task]()
+  private let core: NSThread
 
   private init (_ thread: NSThread) {
-    self.thread = thread
+    core = thread
   }
 
-  private func retainTask (task: Task, isRetained: Bool) {
-    let id = ObjectIdentifier(task)
-    let newValue: Task! = isRetained ? task : nil
-    lock(self) { self.tasks[id] = newValue }
+  private func perform (asynchronous: Bool, _ block: Void -> Void) {
+    var task: Task!
+    task = Task { block(); task = nil }
+    core.callMethod("execute", target: task, asynchronous: asynchronous)
   }
 
   private class Task : NSObject {
 
-    init (_ task: Void -> Void) {
-      self.task = task
+    init (_ block: Void -> Void) {
+      task = block
       super.init()
     }
 
     let task: Void -> Void
 
-    weak var thread: Thread!
-
-    /// Adds this task to its assigned thread to be performed when possible.
-    func schedule (thread: Thread, _ asynchronous: Bool) {
-      self.thread = thread
-      thread.retainTask(self, isRetained: true)
-      thread.thread.callMethod("execute", target: self, asynchronous: asynchronous)
-    }
-
-    /// Executes the given task block immediately.
-    @objc func execute () {
-      task()
-      thread?.retainTask(self, isRetained: false)
-    }
+    @objc func execute () { task() }
   }
 }
 

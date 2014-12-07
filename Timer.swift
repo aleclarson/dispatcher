@@ -19,9 +19,10 @@ public class Timer {
       return
     }
 
-    _callingThread = currentThread
+    _callingThread = Thread.current
     _callingQueue = gcd.current
-    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.wrapped)
+
+    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
     dispatch_source_set_timer(_source, dispatch_walltime(nil, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
     dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire() }
     dispatch_resume(_source)
@@ -32,6 +33,8 @@ public class Timer {
 
 
   // MARK: Read-only
+
+  public var isActive: Bool { return _isActive.value }
 
   public let tolerance: Seconds
   
@@ -47,15 +50,15 @@ public class Timer {
   }
   
   public func fire () {
-    if _isActive { return }
+    if isActive { return }
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
-    _callingThread.async(callback)
+    _callingQueue?.async(callback) ?? _callingThread?.async(callback)
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
   }
   
   public func stop () {
-    if _isActive { return }
-    _isActive = true
+    if isActive { return }
+    _isActive.value = true
     dispatch_source_cancel(_source)
     activeTimers[ObjectIdentifier(self)] = nil
   }
@@ -66,6 +69,8 @@ public class Timer {
 
   private let _source: dispatch_source_t!
 
+  private var _isActive = Lock(false)
+
   private var _callingThread: Thread!
 
   private var _callingQueue: Queue!
@@ -74,16 +79,8 @@ public class Timer {
 
   private var _remainingRepeats = 0
 
-  // The backing store for `_isActive`
-  private var _active = false
+  private func _callBack (block: Void -> Void) {
 
-  private var _isActive: Bool {
-    get {
-      return lock(self) { self._active }
-    }
-    set {
-      lock(self) { self._active = newValue }
-    }
   }
 }
 

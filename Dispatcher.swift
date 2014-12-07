@@ -14,13 +14,13 @@ public class Dispatcher : Queue {
     return Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue()
   }
 
-  public let main = Queue()
+  public let main = Queue(.Main)
 
-  public let high = Queue(DISPATCH_QUEUE_PRIORITY_HIGH)
+  public let high = Queue(.High)
 
-  public let low = Queue(DISPATCH_QUEUE_PRIORITY_LOW)
+  public let low = Queue(.Low)
 
-  public let background = Queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND)
+  public let background = Queue(.Background)
 
 
 
@@ -40,7 +40,7 @@ public class Dispatcher : Queue {
 
   // MARK: Private
 
-  private override init () {
-    super.init(DISPATCH_QUEUE_PRIORITY_DEFAULT)
+  private init () {
+    super.init(.Normal)
   }
 }

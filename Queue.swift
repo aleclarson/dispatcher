@@ -10,42 +10,35 @@ public class Queue {
   /// This can only be set if this Queue is serial and created by you.
   public var priority: Priority {
     willSet {
-      assert(!isGlobal, "not allowed to set the priority of a global queue")
-      assert(!isMain, "not allowed to set the priority of the main queue")
-    }
-    didSet {
-      var target: Queue!
-      switch priority {
-        case .Main:       target = gcd.main
-        case .High:       target = gcd.high
-        case .Normal:     target = gcd
-        case .Low:        target = gcd.low
-        case .Background: target = gcd.background
-      }
-      dispatch_set_target_queue(wrapped, target.wrapped)
+      assert(!isBuiltin, "not allowed to set the priority of a built-in queue")
+      dispatch_set_target_queue(core, newValue.builtin.core)
     }
   }
 
+  public var isCurrent: Bool { return dispatch_get_specific(&kQueueCurrentKey) == getMutablePointer(self) }
+
   /// If `true`, this Queue always executes one block at a time.
   public let isSerial: Bool
-
-  public var isCurrent: Bool { return dispatch_get_specific(&kQueueCurrentKey) == getMutablePointer(self) }
 
   /// If `true`, this Queue wraps around the main UI queue.
   public var isMain: Bool { return self === gcd.main }
 
   /// If `true`, this Queue wraps around one of Apple's built-in dispatch queues.
-  public let isGlobal: Bool
+  public let isBuiltin: Bool
+
+  
+
+  // MARK: Methods
 
   /// Calls the callback asynchronously on this queue.
   public func async (block: Void -> Void) {
-    dispatch_async(wrapped) { block() }
+    dispatch_async(core) { block() }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called synchronously on this queue.
   public func sync (block: Void -> Void) {
-    isCurrent ? block() : dispatch_sync(wrapped) { block() }
+    isCurrent ? block() : dispatch_sync(core) { block() }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
@@ -55,69 +48,74 @@ public class Queue {
   }
 
   public func suspend () {
-    dispatch_suspend(self.wrapped)
+    dispatch_suspend(core)
   }
 
   public func resume () {
-    dispatch_resume(self.wrapped)
+    dispatch_resume(core)
   }
 
   /// Asynchronously submits a barrier block to this Queue.
   public func barrier (block: Void -> Void) {
     assert(!isSerial, "a barrier is pointless on a serial queue")
-    assert(!isGlobal, "a barrier cannot be used on a global queue")
-    assert(!isMain, "a barrier cannot be used on the main queue")
-    dispatch_barrier_async(wrapped, block)
+    assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
+    dispatch_barrier_async(core, block)
   }
 
-  public let wrapped: dispatch_queue_t
+  public let core: dispatch_queue_t
 
-  public enum Priority : dispatch_queue_priority_t {
+
+
+  // MARK: Nested Types
+
+  public enum Priority {
     case Background // Least important
     case Low
     case Normal
     case High
     case Main // Most important
+
+    public var core: dispatch_queue_priority_t! {
+      switch self {
+        case .Main:       return nil
+        case .High:       return DISPATCH_QUEUE_PRIORITY_HIGH
+        case .Normal:     return DISPATCH_QUEUE_PRIORITY_DEFAULT
+        case .Low:        return DISPATCH_QUEUE_PRIORITY_LOW
+        case .Background: return DISPATCH_QUEUE_PRIORITY_BACKGROUND
+      }
+    }
+
+    /// The built-in Queue associated with this Priority
+    public var builtin: Queue {
+      switch self {
+        case .Main:       return gcd.main
+        case .High:       return gcd.high
+        case .Normal:     return gcd
+        case .Low:        return gcd.low
+        case .Background: return gcd.background
+      }
+    }
   }
 
 
 
   // MARK: Internal
 
-  /// Initializes the main queue.
-  init () {
-    isSerial = true
-    isGlobal = false
-    priority = .Main
-    wrapped = dispatch_get_main_queue()
-
-    _register()
-  }
-
-  /// Initializes one of Apple's global queues.
-  init (_ priority: dispatch_queue_priority_t) {
-    isSerial = false
-    isGlobal = true
-    wrapped = dispatch_get_global_queue(priority, 0)
-
-    switch priority {
-      case DISPATCH_QUEUE_PRIORITY_LOW:        self.priority = .Low
-      case DISPATCH_QUEUE_PRIORITY_HIGH:       self.priority = .High
-      case DISPATCH_QUEUE_PRIORITY_DEFAULT:    self.priority = .Normal
-      case DISPATCH_QUEUE_PRIORITY_BACKGROUND: self.priority = .Background
-      default: fatalError("invalid priority")
-    }
-
+  /// Initializes one of Apple's built-in queues.
+  init (_ priority: Priority) {
+    self.priority = priority
+    isSerial = priority == .Main
+    core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
+    isBuiltin = true
     _register()
   }
 
   /// Initializes a custom queue.
   init (_ serial: Bool, _ priority: Priority) {
-    isSerial = serial
-    isGlobal = false
     self.priority = priority
-    wrapped = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
-
+    isSerial = serial
+    core = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
+    isBuiltin = false
     _register()
   }
 
@@ -126,7 +124,7 @@ public class Queue {
   // MARK: Private
 
   private func _register () {
-    dispatch_queue_set_specific(wrapped, &kQueueCurrentKey, getMutablePointer(self), nil)
+    dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)
   }
 }
 
