@@ -25,17 +25,17 @@ public class Thread {
     isCurrent ? closure() : blockCurrentQueueOrThread { Task(self, false, closure); return }
   }
 
-  /// Pushes a block to be performed on this Thread.
-  /// This function typically returns before the passed block finishes executing.
-  public func async (block: Void -> Void) {
-    Task(self, true, block)
+  /// Pushes a closure to be performed on this Thread.
+  /// This function typically returns before the passed closure finishes executing.
+  public func async (closure: Void -> Void) {
+    Task(self, true, closure)
   }
 
-  /// Pushes a block to be performed on this Thread.
-  /// If `isCurrent` is `true`, the passed block is called with `sync()`.
-  /// If `isCurrent` is `false`, the passed block is called with `async()`.
-  public func csync (block: Void -> Void) {
-    isCurrent ? block() : async(block)
+  /// Pushes a closure to be performed on this Thread.
+  /// If `isCurrent` is `true`, the passed closure is called with `sync()`.
+  /// If `isCurrent` is `false`, the passed closure is called with `async()`.
+  public func csync (closure: Void -> Void) {
+    isCurrent ? closure() : async(closure)
   }
 
 
