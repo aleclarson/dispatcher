@@ -4,6 +4,7 @@ import UIKit
 
 public typealias Seconds = CGFloat
 
+/// You must use the `weak` keyword when creating a Timer property anywhere.
 public class Timer {
   
   public convenience init (_ delay: Seconds, _ callback: Void -> Void) {
