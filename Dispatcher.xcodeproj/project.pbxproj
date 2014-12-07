@@ -21,9 +21,6 @@
 		11A4343F1A33827A00D155DB /* Dispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 11A4343E1A33825500D155DB /* Dispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11A434411A33AFAF00D155DB /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434401A33AFAF00D155DB /* TestHelpers.swift */; };
 		11A434451A33BCEF00D155DB /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434431A33BBE300D155DB /* Lock.swift */; };
-		11EABE2819F32F60003A1AD6 /* Queue.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* Queue.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		11EABE2919F32F60003A1AD6 /* Work.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* Work.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		11FC701919F3B8F200D93EDE /* Timer.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1183134E19F342CE002C2F0A /* Timer.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -129,9 +126,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				11A4343D1A33821D00D155DB /* NSThread.h in Headers */,
-				11EABE2819F32F60003A1AD6 /* Queue.swift in Headers */,
-				11FC701919F3B8F200D93EDE /* Timer.swift in Headers */,
-				11EABE2919F32F60003A1AD6 /* Work.swift in Headers */,
 				11A4343F1A33827A00D155DB /* Dispatcher.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
