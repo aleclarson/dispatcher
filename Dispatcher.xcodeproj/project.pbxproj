@@ -97,15 +97,15 @@
 		1123A3A819F1404F00BF890F /* Dispatcher */ = {
 			isa = PBXGroup;
 			children = (
-				11A4343E1A33825500D155DB /* Dispatcher.h */,
 				11A434321A33814800D155DB /* Thread.swift */,
 				1123A3DA19F1535900BF890F /* Queue.swift */,
 				1123A3DB19F1535900BF890F /* Work.swift */,
 				1183134E19F342CE002C2F0A /* Timer.swift */,
 				11A434431A33BBE300D155DB /* Lock.swift */,
-				1123A3D719F1532F00BF890F /* Info.plist */,
 				11A4343A1A3381F400D155DB /* NSThread.m */,
 				11A4343C1A3381FE00D155DB /* NSThread.h */,
+				11A4343E1A33825500D155DB /* Dispatcher.h */,
+				1123A3D719F1532F00BF890F /* Info.plist */,
 			);
 			path = Dispatcher;
 			sourceTree = "<group>";

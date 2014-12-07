@@ -78,10 +78,6 @@ public class Timer {
   private var _shouldRepeat = false
 
   private var _remainingRepeats = 0
-
-  private func _callBack (block: Void -> Void) {
-
-  }
 }
 
 let timerQueue = Queue.medium

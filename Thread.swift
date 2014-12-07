@@ -11,14 +11,6 @@ public class Thread {
     return core === NSThread.mainThread()
   }
 
-  public class var current: Thread {
-    return Thread.wrap(NSThread.currentThread())
-  }
-
-  public class var main: Thread {
-    return Thread.wrap(NSThread.mainThread())
-  }
-
 
 
   // MARK: Methods
@@ -41,6 +33,22 @@ public class Thread {
   public func csync (block: Void -> Void) {
     isCurrent ? block() : async(block)
   }
+
+
+
+  // MARK: Class Variables
+
+  public class var current: Thread {
+    return Thread.wrap(NSThread.currentThread())
+  }
+
+  public class var main: Thread {
+    return Thread.wrap(NSThread.mainThread())
+  }
+
+
+
+  // MARK: Class Methods
 
   /// Wraps an NSThread with a Thread and caches the result.
   /// If the NSThread has been wrapped earlier, the cached result is used.
