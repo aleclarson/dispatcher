@@ -20,7 +20,7 @@ public class Timer {
     }
 
     _callingThread = Thread.current
-    _callingQueue = gcd.current
+    _callingQueue = Queue.current
 
     _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
     dispatch_source_set_timer(_source, dispatch_walltime(nil, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
@@ -84,6 +84,6 @@ public class Timer {
   }
 }
 
-let timerQueue = gcd
+let timerQueue = Queue.medium
 
 var activeTimers = [ObjectIdentifier:Timer]()

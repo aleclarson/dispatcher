@@ -16,7 +16,7 @@ public class Lock<T> {
   /// If `serial` equals `true`, everything blocks everything.
   /// If `serial` equals `false`, writes block everything, but reads are concurrent.
   public init (_ defaultValue: T! = nil, _ serial: Bool = false) {
-    _queue = (serial ? gcd.serial : gcd.concurrent)(gcd.current.priority)
+    _queue = (serial ? Queue.serial : Queue.concurrent)(Queue.current.priority)
     _write = serial ? _queue.sync : _queue.barrier
     _value = defaultValue
   }

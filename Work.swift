@@ -12,7 +12,7 @@ public class Work {
 
   /// Called when all work is completed.
   public func done (callback: Void -> Void) {
-    dispatch_group_notify(core, gcd.current.core, callback)
+    dispatch_group_notify(core, Queue.current.core, callback)
   }
 }
 
