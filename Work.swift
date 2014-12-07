@@ -2,6 +2,7 @@
 import CoreGraphics
 import Dispatch
 
+/// Tracks an arbitrary amount of work and notifies any callbacks when all work is completed.
 public class Work {
 
   public init (_ amount: Int = 0) {

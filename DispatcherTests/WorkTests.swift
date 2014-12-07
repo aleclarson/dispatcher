@@ -31,9 +31,9 @@ class WorkTests: XCTestCase {
 
     work = Work(2)
 
-    gcd.async {
+    Queue.medium.async {
       self.work--
-      gcd.main.sync {
+      Queue.main.async {
         self.work--
       }
     }

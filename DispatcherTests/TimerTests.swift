@@ -26,9 +26,9 @@ class TimerTests: XCTestCase {
   func testCallbackQueue () {
     let e = expectationWithDescription(nil)
     
-    gcd.async {
+    Queue.medium.async {
       self.timer = Timer(0.1) {
-        XCTAssert(gcd.isCurrent)
+        XCTAssert(Queue.medium.isCurrent)
         e.fulfill()
       }
     }
@@ -79,9 +79,9 @@ class TimerTests: XCTestCase {
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
-    gcd.async {
+    Queue.medium.async {
       self.timer = Timer(0.5) {
-        gcd.main.sync {
+        Queue.main.sync {
           expectation.fulfill()
         }
       }
@@ -97,7 +97,7 @@ class TimerTests: XCTestCase {
     let startTime = CFAbsoluteTimeGetCurrent()
 
     timer = Timer(Seconds(expectedDelay)) {
-      gcd.async {
+      Queue.medium.async {
         actualDelay = CFAbsoluteTimeGetCurrent() - startTime
         println("actualDelay = \(actualDelay)")
         XCTAssert(actualDelay == expectedDelay)

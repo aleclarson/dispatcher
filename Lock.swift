@@ -1,5 +1,5 @@
 
-/// Synchronizes a value across Threads (including Queues).
+/// Synchronizes a value across Threads.
 public class Lock<T> {
 
   public var value: T! {
