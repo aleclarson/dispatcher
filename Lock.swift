@@ -21,6 +21,11 @@ public class Lock<T> {
     _value = defaultValue
   }
 
+  /// Combines a read and write into a single transaction to save time.
+  public func write (block: (inout T!) -> Void) {
+    _write { block(&self._value) }
+  }
+
   private let _write: (Void -> Void) -> Void
 
   private let _queue: Queue
