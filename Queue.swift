@@ -26,6 +26,8 @@ public class Queue {
   /// If `true`, this Queue wraps around one of Apple's built-in dispatch queues.
   public let isBuiltin: Bool
 
+  public let core: dispatch_queue_t
+
   
 
   // MARK: Methods
@@ -61,8 +63,6 @@ public class Queue {
     assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
     dispatch_barrier_async(core, block)
   }
-
-  public let core: dispatch_queue_t
 
 
 

@@ -3,23 +3,23 @@ import UIKit
 import XCTest
 import Dispatcher
 
-class DispatcherTests: XCTestCase {
+class QueueTests: XCTestCase {
 
   func testQueueIsCurrent () {
-    XCTAssert(!gcd.isCurrent)
-    gcd.sync { XCTAssert(gcd.isCurrent) }
+    XCTAssert(!Queue.medium.isCurrent)
+    Queue.medium.sync { XCTAssert(Queue.medium.isCurrent) }
   }
 
-  func testDispatcherCurrent () {
-    XCTAssert(gcd.main === gcd.current)
-    gcd.sync { XCTAssert(gcd.main !== gcd.current) }
+  func testQueueCurrent () {
+    XCTAssert(Queue.main.isCurrent)
+    Queue.medium.sync { XCTAssert(Queue.main !== Queue.current) }
   }
 
   func testSerialQueue () {
 
     var n = 0
 
-    let queue = gcd.serial()
+    let queue = Queue.serial()
 
     queue.async { XCTAssert(++n == 1) }
 
@@ -33,9 +33,9 @@ class DispatcherTests: XCTestCase {
 
     var n = 0
 
-    XCTAssert(gcd.current === gcd.main)
+    XCTAssert(Queue.current === Queue.main)
 
-    gcd.main.sync { n += 1 }
+    Queue.main.sync { n += 1 }
 
     XCTAssert(n == 1)
   }
@@ -44,7 +44,7 @@ class DispatcherTests: XCTestCase {
 
     let expectation = expectationWithDescription(nil)
 
-    let q = gcd.serial()
+    let q = Queue.serial()
 
     q.suspend()
 
@@ -55,12 +55,21 @@ class DispatcherTests: XCTestCase {
     waitForExpectationsWithTimeout(0.5, handler: nil)
   }
 
-  // Ideally, this test should fail. But this issue is not yet fixed. Though it is uncommon.
+  // Ideally, this test should fail. But this issue is not yet fixed.
+  // But this situation is rare for most people.
 //  func testSyncInSync () {
 //
 //    let expectation = expectationWithDescription(nil)
 //
-//    gcd.high.async(gcd.sync(gcd.background.sync(gcd.sync(expectation.fulfill()))))
+//    Queue.high.async {
+//      Queue.medium.sync {
+//        Queue.background.sync {
+//          Queue.medium.sync {
+//            expectation.fulfill()
+//          }
+//        }
+//      }
+//    }
 //
 //    waitForExpectationsWithTimeout(0.5) { XCTAssertNotNil($0) }
 //  }
@@ -69,8 +78,8 @@ class DispatcherTests: XCTestCase {
 
     let expectation = expectationWithDescription(nil)
 
-    gcd.main.async {
-      gcd.main.async {
+    Queue.main.async {
+      Queue.main.async {
         expectation.fulfill()
       }
     }

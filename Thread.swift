@@ -1,7 +1,11 @@
 
 import Foundation
 
+/// Threads are serial by definition.
+/// Queues manage their own Threads.
 public class Thread {
+
+  // MARK: Properties
 
   public var isCurrent: Bool {
     return core === NSThread.currentThread()
@@ -52,6 +56,7 @@ public class Thread {
 
   /// Wraps an NSThread with a Thread and caches the result.
   /// If the NSThread has been wrapped earlier, the cached result is used.
+  /// Avoid creating and wrapping your own NSThreads in favor of using a serial Queue.
   public class func wrap (thread: NSThread) -> Thread {
     let id = ObjectIdentifier(thread)
 
