@@ -7,13 +7,13 @@ public class Thread {
 
   // MARK: Properties
 
-  public var isCurrent: Bool {
-    return core === NSThread.currentThread()
-  }
+  public var isBlocked: Bool { return _blocked.value }
 
-  public var isMain: Bool {
-    return core === NSThread.mainThread()
-  }
+  public var isCurrent: Bool { return core === NSThread.currentThread() }
+
+  public var isMain: Bool { return core === NSThread.mainThread() }
+
+  private let core: NSThread
 
 
 
@@ -22,7 +22,21 @@ public class Thread {
   /// Pushes a block to be performed on this Thread.
   /// This function always returns after the passed block finishes executing.
   public func sync (block: Void -> Void) {
-    isCurrent ? block() : perform(false, block)
+    if isCurrent {
+      block()
+    }
+
+    else  {
+      _blocked.write {
+        isBlocked in
+        assert(!isBlocked, "blocking a blocked thread causes a deadlock")
+        isBlocked = true
+      }
+
+      perform(false, block)
+
+      _blocked.value = false
+    }
   }
 
   /// Pushes a block to be performed on this Thread.
@@ -71,9 +85,12 @@ public class Thread {
 
 
 
-  // MARK: Private
+  // MARK: Internal
 
-  private let core: NSThread
+  let _blocked = Lock(false)
+
+
+  // MARK: Private
 
   private init (_ thread: NSThread) {
     core = thread

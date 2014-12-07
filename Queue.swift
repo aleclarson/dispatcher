@@ -17,7 +17,11 @@ public class Queue {
 
   public var isCurrent: Bool { return dispatch_get_specific(&kQueueCurrentKey) == getMutablePointer(self) }
 
-  /// If `true`, this Queue always executes one block at a time.
+  /// If `true`, this Queue is waiting for a closure to finish before other closures are executed.
+  /// The `sync(_:)` and `barrier(_:)` methods cause `isBlocked` to become `true`.
+  public var isBlocked: Bool { return _blocked.value }
+
+  /// If `true`, this Queue always executes one closure at a time.
   public let isSerial: Bool
 
   /// If `true`, this Queue wraps around the main UI queue.
@@ -32,21 +36,41 @@ public class Queue {
 
   // MARK: Methods
 
-  /// Calls the callback asynchronously on this queue.
-  public func async (block: Void -> Void) {
-    dispatch_async(core) { block() }
+  /// Calls the callback asynchronously on this Queue.
+  /// The Thread you call this from will continue without waiting for your closure to finish.
+  public func async (closure: Void -> Void) {
+    dispatch_async(core) { closure() }
   }
 
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called synchronously on this queue.
-  public func sync (block: Void -> Void) {
-    isCurrent ? block() : dispatch_sync(core) { block() }
+  public func sync (closure: Void -> Void) {
+    if isCurrent { return closure() }
+
+    // Whether the current queue (or thread) is blocked.
+    let isCurrentBlocked = Queue.current?._blocked ?? Thread.current._blocked
+
+    isCurrentBlocked.write {
+      isBlocked in
+
+      // Ensure the current queue is not already blocked
+      assert(!isBlocked, "blocking a blocked queue causes a deadlock")
+
+      // Block the current queue
+      isBlocked = true
+    }
+
+    // Execute `closure` on this queue
+    dispatch_sync(core) { closure() }
+
+    // Unblock the current queue
+    isCurrentBlocked.value = false
   }
 
   /// If this queue is the current queue, the callback is called immediately.
   /// Else, the callback is called asynchronously on this queue.
-  public func csync (block: Void -> Void) {
-    isCurrent ? block() : async(block)
+  public func csync (closure: Void -> Void) {
+    isCurrent ? closure() : async(closure)
   }
 
   public func suspend () {
@@ -57,11 +81,17 @@ public class Queue {
     dispatch_resume(core)
   }
 
-  /// Asynchronously submits a barrier block to this Queue.
-  public func barrier (block: Void -> Void) {
+  /// Asynchronously adds your closure to be executed on this queue.
+  /// While your closure executes, other closures cannot execute.
+  /// Barriers only work with concurrent queues.
+  public func barrier (closure: Void -> Void) {
     assert(!isSerial, "a barrier is pointless on a serial queue")
     assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
-    dispatch_barrier_async(core, block)
+    dispatch_barrier_async(core) {
+      self._blocked.value = true
+      closure()
+      self._blocked.value = false
+    }
   }
 
 
@@ -89,12 +119,12 @@ public class Queue {
 
   // MARK: Class Methods
 
-  /// Creates a new Queue that executes one block at a time.
+  /// Creates a new Queue that executes one closure at a time.
   public class func serial (_ priority: Priority = .Medium) -> Queue {
     return Queue(true, priority)
   }
 
-  /// Creates a new Queue that executes multiple blocks at once.
+  /// Creates a new Queue that executes multiple closures at once.
   public class func concurrent (_ priority: Priority = .Medium) -> Queue {
     return Queue(false, priority)
   }
@@ -154,9 +184,11 @@ public class Queue {
     _register()
   }
 
-  
+
 
   // MARK: Private
+
+  private let _blocked = Lock(false)
 
   private func _register () {
     dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)

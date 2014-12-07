@@ -2,6 +2,7 @@
 /// Synchronizes a value across Threads.
 public class Lock<T> {
 
+  /// Acquires a lock on the value.
   public var value: T! {
     get {
       var value: T!
@@ -22,6 +23,7 @@ public class Lock<T> {
   }
 
   /// Combines a read and write into a single transaction to save time.
+  /// Keep your block as short as possible.
   public func write (block: (inout T!) -> Void) {
     _write { block(&self._value) }
   }
