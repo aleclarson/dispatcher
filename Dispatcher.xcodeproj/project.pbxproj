@@ -14,6 +14,12 @@
 		1123A3DD19F1535900BF890F /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* DispatchQueue.swift */; };
 		1123A3DE19F1535900BF890F /* DispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* DispatchGroup.swift */; };
 		1123A3DF19F1535900BF890F /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DC19F1535900BF890F /* Dispatcher.swift */; };
+		1183134F19F342CE002C2F0A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183134E19F342CE002C2F0A /* DispatchTimer.swift */; };
+		1183135119F354C4002C2F0A /* DispatchTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135019F354C4002C2F0A /* DispatchTimerTests.swift */; };
+		1183135319F35B54002C2F0A /* DispatchGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135219F35B54002C2F0A /* DispatchGroupTests.swift */; };
+		11EABE2719F32F60003A1AD6 /* Dispatcher.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DC19F1535900BF890F /* Dispatcher.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		11EABE2819F32F60003A1AD6 /* DispatchQueue.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* DispatchQueue.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		11EABE2919F32F60003A1AD6 /* DispatchGroup.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* DispatchGroup.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +53,9 @@
 		1123A3DA19F1535900BF890F /* DispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = SOURCE_ROOT; };
 		1123A3DB19F1535900BF890F /* DispatchGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchGroup.swift; sourceTree = SOURCE_ROOT; };
 		1123A3DC19F1535900BF890F /* Dispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = SOURCE_ROOT; };
+		1183134E19F342CE002C2F0A /* DispatchTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTimer.swift; sourceTree = SOURCE_ROOT; };
+		1183135019F354C4002C2F0A /* DispatchTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTimerTests.swift; sourceTree = "<group>"; };
+		1183135219F35B54002C2F0A /* DispatchGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchGroupTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +101,7 @@
 				1123A3DC19F1535900BF890F /* Dispatcher.swift */,
 				1123A3DA19F1535900BF890F /* DispatchQueue.swift */,
 				1123A3DB19F1535900BF890F /* DispatchGroup.swift */,
+				1183134E19F342CE002C2F0A /* DispatchTimer.swift */,
 				1123A3D719F1532F00BF890F /* Info.plist */,
 			);
 			path = Dispatcher;
@@ -101,6 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				1123A3B719F1404F00BF890F /* DispatcherTests.swift */,
+				1183135019F354C4002C2F0A /* DispatchTimerTests.swift */,
+				1183135219F35B54002C2F0A /* DispatchGroupTests.swift */,
 			);
 			path = DispatcherTests;
 			sourceTree = "<group>";
@@ -112,6 +124,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11EABE2719F32F60003A1AD6 /* Dispatcher.swift in Headers */,
+				11EABE2819F32F60003A1AD6 /* DispatchQueue.swift in Headers */,
+				11EABE2919F32F60003A1AD6 /* DispatchGroup.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,6 +241,7 @@
 				1123A3DD19F1535900BF890F /* DispatchQueue.swift in Sources */,
 				1123A3DE19F1535900BF890F /* DispatchGroup.swift in Sources */,
 				1123A3DF19F1535900BF890F /* Dispatcher.swift in Sources */,
+				1183134F19F342CE002C2F0A /* DispatchTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,7 +249,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1183135319F35B54002C2F0A /* DispatchGroupTests.swift in Sources */,
 				1123A3B819F1404F00BF890F /* DispatcherTests.swift in Sources */,
+				1183135119F354C4002C2F0A /* DispatchTimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

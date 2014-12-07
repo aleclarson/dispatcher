@@ -1,101 +1,16 @@
-<img src="http://i.imgur.com/w30RRFf.jpg"/>
+<img src="http://i.imgur.com/sEM1zbl.jpg"/>
 
-**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html).
+**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html) by introducing 4 new Swift classes.
 
-```Swift
-gcd.async {
-	
-	// do something that takes time...
+#### [Dispatcher](https://github.com/aleclarson/dispatcher/wiki/Dispatcher)
 
-	gcd.main.sync {
+#### [Queue](https://github.com/aleclarson/dispatcher/wiki/Queue)
 
-		// update the user interface...
-	}
-}
-```
+#### [Group](https://github.com/aleclarson/dispatcher/wiki/Group)
 
-#### What's a DispatchQueue?
+#### [Timer](https://github.com/aleclarson/dispatcher/wiki/Timer)
 
-A `DispatchQueue` can execute closures in order (a.k.a. serially) or out of order (a.k.a. concurrently).
-
-Use `async()` and `sync()` to add closures to a `DispatchQueue`.
-
-* `async()` returns **before** the closure you pass it is done executing.
-
-* `sync()` returns **after** the closure you pass it is done executing.
-
--
-
-#### What DispatchQueues already exist?
-
-These 5 queues are at your disposal...
-
-* `gcd`: The `Dispatcher` singleton. The concurrent `DispatchQueue` for default-priority tasks.
-
-* `gcd.main`: The serial `DispatchQueue` where all your UI magic takes place.
-
-* `gcd.high`: The concurrent `DispatchQueue` for high-priority tasks.
-
-* `gcd.low`: The concurrent `DispatchQueue` for low-priority tasks.
-
-* `gcd.background`: The concurrent `DispatchQueue` for no-priority tasks.
-
--
-
-#### Which DispatchQueue am I currently on?
-
-There are two ways to know which `DispatchQueue` you're currently on:
-
-* `gcd.current`: Only available on `Dispatcher`.
-
-* `gcd.isCurrent`: Available on all `DispatchQueue`s.
-
--
-
-#### How do I make my own DispatchQueue?
-
-Simply call `gcd.serial()` to make a serial `DispatchQueue`.
-
-And call `gcd.concurrent()` to make a concurrent `DispatchQueue`.
-
-You **must** retain these yourself!
-
--
-
-#### What's a DispatchGroup?
-
-A `DispatchGroup` keeps track of multiple related closures (specifically when all are finished).
-
-```Swift
-let group = DispatchGroup(1)
-
-gcd.async {
-
-  // do some work...
-  
-  --group
-}
-
-if someCondition {
-  
-  ++group
-  
-  gcd.async {
-    
-    // do some other work...
-    
-    --group
-  }
-}
-
-group.done {
-	
-  // do something when both are finished...
-}
-
-```
-
--
+---
 
 #### Installation
 
