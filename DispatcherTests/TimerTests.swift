@@ -95,12 +95,10 @@ class TimerTests: XCTestCase {
     let startTime = CFAbsoluteTimeGetCurrent()
 
     timer = Timer(Seconds(expectedDelay)) {
-      Queue.medium.async {
-        actualDelay = CFAbsoluteTimeGetCurrent() - startTime
-        println("actualDelay = \(actualDelay)")
-        XCTAssert(actualDelay == expectedDelay)
-        e.fulfill()
-      }
+      actualDelay = CFAbsoluteTimeGetCurrent() - startTime
+      println("actualDelay = \(actualDelay)")
+      XCTAssert(actualDelay == expectedDelay)
+      e.fulfill()
     }
 
     waitForExpectationsWithTimeout(1, handler: nil)
