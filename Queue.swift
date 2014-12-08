@@ -174,7 +174,7 @@ public class Queue : Dispatcher {
 }
 
 var kQueueCurrent: UnsafeMutablePointer<Void> {
-  dispatch_once(&kQueueBuiltin) { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground }
+  once { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground }
   return dispatch_get_specific(&kQueueCurrentKey)
 }
 
@@ -193,5 +193,3 @@ private let kQueueLow = Queue(.Low)
 private let kQueueBackground = Queue(.Background)
 
 private var kQueueCurrentKey = 0
-
-private var kQueueBuiltin = dispatch_once_t()
