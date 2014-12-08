@@ -162,7 +162,7 @@ public class Queue : Dispatcher {
   // MARK: Private
 
   private func _register () {
-
+    dispatch_queue_set_specific(core, kQueueCurrentKey, pointerFromObject(self), nil)
   }
 
   private func _didSetPriority () {
@@ -171,13 +171,8 @@ public class Queue : Dispatcher {
 }
 
 var kQueueCurrent: Queue! {
-  get {
-    allocBuiltinQueues()
-    return objectFromPointer(dispatch_get_specific(kQueueCurrentKey))
-  }
-  set {
-    dispatch_queue_set_specific(newValue.core, kQueueCurrentKey, pointerFromObject(newValue), nil)
-  }
+  allocBuiltinQueues()
+  return objectFromPointer(dispatch_get_specific(kQueueCurrentKey))
 }
 
 private let kQueueMain = Queue(.Main)
