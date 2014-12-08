@@ -51,10 +51,10 @@ public class Timer {
     if isActive { return }
     let queue = Queue.current
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
-    _callingDispatcher.async(callback)
+    _callingDispatcher.sync(callback)
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
   }
-  
+
   public func stop () {
     if isActive { return }
     _isActive.value = true
