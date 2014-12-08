@@ -7,8 +7,9 @@ class QueueTests: XCTestCase {
 
   // -Queue.isCurrent
   func testQueueIsCurrent () {
-    XCTAssert(!Queue.medium.isCurrent)
-    Queue.medium.sync {
+    let e = expectationWithDescription(nil)
+
+    Queue.medium.async {
       XCTAssert(Queue.medium.isCurrent)
     }
   }
@@ -18,11 +19,12 @@ class QueueTests: XCTestCase {
     let e = expectationWithDescription(nil)
 
     Queue.medium.async {
-      XCTAssert(Queue.main !=== Queue.current)
-      XCTAssert(Queue.medium === Queue.current)
+      XCTAssert(Queue.main !== Queue.current)
 
       Queue.main.sync {
         XCTAssert(Queue.main === Queue.current)
+
+        e.fulfill()
       }
     }
 
