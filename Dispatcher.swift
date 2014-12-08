@@ -12,7 +12,10 @@ public class Dispatcher {
   }
 
   public var isBlocked: Bool {
-    return _isBlocked.value
+    objc_sync_enter(self)
+    let isBlocked = _isBlocked
+    objc_sync_exit(self)
+    return _isBlocked
   }
 
   /// If this Dispatcher is the current one, the callback is called immediately.
@@ -52,7 +55,7 @@ public class Dispatcher {
 
   // MARK: Internal
 
-  var _isBlocked: Lock<Bool>!
+  var _isBlocked = false
 
   func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
     fatalError("Must override.")
@@ -66,16 +69,15 @@ public class Dispatcher {
 
   private func _block (task: Void -> Void) {
 
-    _isBlocked.lock { isBlocked in
-      assert(!isBlocked, "blocking a blocked Dispatcher causes a deadlock")
-
-      // Block the current Dispatcher
-      isBlocked = true
-    }
+    objc_sync_enter(self)
+    assert(!_isBlocked, "blocking a blocked Dispatcher causes a deadlock")
+    _isBlocked = true // Block this Dispatcher
+    objc_sync_exit(self)
 
     task()
 
-    // Unblock the current Dispatcher
-    _isBlocked.value = false
+    objc_sync_enter(self)
+    _isBlocked = false // Unblock this Dispatcher
+    objc_sync_exit(self)
   }
 }

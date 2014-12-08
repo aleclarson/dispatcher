@@ -39,9 +39,15 @@ public class Queue : Dispatcher {
     assert(!isSerial, "a barrier is pointless on a serial queue")
     assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
     dispatch_barrier_async(core) {
-      self._isBlocked.value = true
+      objc_sync_enter(self)
+      self._isBlocked = true // Block this queue
+      objc_sync_exit(self)
+
       job.perform()
-      self._isBlocked.value = false
+
+      objc_sync_enter(self)
+      self._isBlocked = false // Unblock this queue
+      objc_sync_exit(self)
     }
     return job
   }
@@ -136,7 +142,6 @@ public class Queue : Dispatcher {
     core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
     self.priority = priority
     super.init()
-    _isBlocked = Lock(false, priority: priority)
     _register()
   }
 
@@ -148,7 +153,6 @@ public class Queue : Dispatcher {
     self.priority = priority
     super.init()
     _didSetPriority()
-    _isBlocked = Lock(false, priority: priority)
     _register()
   }
 
