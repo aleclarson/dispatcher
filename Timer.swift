@@ -67,7 +67,7 @@ public class Timer {
 
   private let _source: dispatch_source_t!
 
-  private var _isActive = Lock(false)
+  private var _isActive = Lock(false, serial: true)
 
   private let _callingDispatcher = Dispatcher.current
 
