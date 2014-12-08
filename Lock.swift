@@ -26,8 +26,7 @@ public class Lock <T> {
   }
 
   public init (_ defaultValue: T! = nil, serial: Bool = false, priority: Queue.Priority! = nil) {
-    let currentQueue = Queue.current
-    _queue = Queue(serial, priority ?? currentQueue.priority)
+    _queue = Queue(serial, priority ?? Queue.current.priority)
     _value = defaultValue
   }
 

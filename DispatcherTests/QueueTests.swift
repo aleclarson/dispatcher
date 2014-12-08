@@ -29,6 +29,8 @@ class QueueTests: XCTestCase {
 
   // +Queue.current
   func testQueueCurrent () {
+    XCTAssert(Thread.main.isCurrent)
+
     let e = expectationWithDescription(nil)
     let main = Queue.main
     let current = Queue.current
