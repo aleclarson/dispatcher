@@ -52,18 +52,14 @@ public class Timer {
   }
   
   public func fire (_ asynchronous: Bool = false) {
-    if isActive { return }
-    let queue = Queue.current
+    if !isActive { return }
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
     (asynchronous ? _callingDispatcher.async : _callingDispatcher.sync)(callback)
-    if !_shouldRepeat || _remainingRepeats == 0 { stop() }
+    if !_shouldRepeat || _remainingRepeats == 0 { _stop() }
   }
 
   public func stop () {
-    if isActive { return }
-    _isActive.value = true
-    dispatch_source_cancel(_source)
-    activeTimers[ObjectIdentifier(self)] = nil
+    if isActive { _stop() }
   }
 
 
@@ -72,13 +68,19 @@ public class Timer {
 
   private let _source: dispatch_source_t!
 
-  private var _isActive = Lock(false, serial: true)
+  private var _isActive = Lock(true, serial: true)
 
   private let _callingDispatcher = Dispatcher.current
 
   private var _shouldRepeat = false
 
   private var _remainingRepeats = 0
+
+  private func _stop () {
+    _isActive.value = false
+//    dispatch_source_cancel(_source)
+    activeTimers[ObjectIdentifier(self)] = nil
+  }
 }
 
 let timerQueue = Queue.high
