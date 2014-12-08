@@ -15,7 +15,7 @@ class QueueTests: XCTestCase {
 
   // +Queue.current
   func testQueueCurrent () {
-    let e = expectationWithDescription()
+    let e = expectationWithDescription(nil)
 
     Queue.medium.async {
       XCTAssert(Queue.main !=== Queue.current)
@@ -26,7 +26,7 @@ class QueueTests: XCTestCase {
       }
     }
 
-    waitForExpectationsWithTimeout(1)
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 
   //
