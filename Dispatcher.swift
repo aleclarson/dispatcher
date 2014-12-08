@@ -68,9 +68,7 @@ public class Dispatcher {
 
   private func _block (closure: Void -> Void) {
 
-    let isBlocked = Dispatcher.current._isBlocked
-
-    isBlocked.set { isBlocked in
+    _isBlocked.set { isBlocked in
       assert(!isBlocked, "blocking a blocked Dispatcher causes a deadlock")
 
       // Block the current Dispatcher
@@ -80,6 +78,6 @@ public class Dispatcher {
     closure()
 
     // Unblock the current Dispatcher
-    isBlocked.set(false)
+    _isBlocked.set(false)
   }
 }
