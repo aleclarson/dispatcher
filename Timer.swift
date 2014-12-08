@@ -77,6 +77,6 @@ public class Timer {
   private var _remainingRepeats = 0
 }
 
-let timerQueue = Queue.medium
+let timerQueue = Queue.high
 
 var activeTimers = [ObjectIdentifier:Timer]()

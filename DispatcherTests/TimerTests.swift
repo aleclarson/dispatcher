@@ -74,11 +74,6 @@ class TimerTests: XCTestCase {
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
-  func testUnretainedTimer () {
-    Timer(0.1) { self.calls += 1 }
-    timer = Timer(0.2) { XCTAssert(self.calls == 0) }
-  }
-
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
