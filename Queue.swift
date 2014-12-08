@@ -15,7 +15,7 @@ public class Queue : Dispatcher {
     }
   }
 
-  public override var isCurrent: Bool { return kQueueCurrent == getMutablePointer(self) }
+  public override var isCurrent: Bool { return kQueueCurrent == pointerFromObject(self) }
 
   /// If `true`, this Queue always executes one task at a time.
   public let isSerial: Bool
@@ -71,7 +71,7 @@ public class Queue : Dispatcher {
   /// Returns `nil` if the current Thread was not created by a Queue; normally this doesn't happen.
   public override class var current: Queue! {
     let queue = kQueueCurrent
-    return queue != nil ? Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue() : nil
+    return objectFromPointer(kQueueCurrent)
   }
 
   public class var main: Queue { return kQueueMain }
@@ -165,7 +165,7 @@ public class Queue : Dispatcher {
   // MARK: Private
 
   private func _register () {
-    dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)
+    dispatch_queue_set_specific(core, &kQueueCurrentKey, pointerFromObject(self), nil)
   }
 
   private func _didSetPriority () {
@@ -174,12 +174,8 @@ public class Queue : Dispatcher {
 }
 
 var kQueueCurrent: UnsafeMutablePointer<Void> {
-  once { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground }
-  return dispatch_get_specific(&kQueueCurrentKey)
-}
-
-func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
+  allocBuiltinQueues()
+  return dispatch_get_specific(kQueueCurrentKey)
 }
 
 private let kQueueMain = Queue(.Main)
@@ -192,4 +188,20 @@ private let kQueueLow = Queue(.Low)
 
 private let kQueueBackground = Queue(.Background)
 
-private var kQueueCurrentKey = 0
+private var kQueueCurrentKey = UnsafePointer<Void>()
+
+private var allocBuiltinQueuesOnce = dispatch_once_t()
+
+private func pointerFromObject (object: AnyObject!) -> UnsafeMutablePointer<Void> {
+  return object != nil ? UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue())) : UnsafeMutablePointer<Void>.null()
+}
+
+private func objectFromPointer <T:AnyObject> (pointer: UnsafeMutablePointer<Void>) -> T! {
+  return pointer != nil ? Unmanaged<T>.fromOpaque(COpaquePointer(pointer)).takeUnretainedValue() : nil
+}
+
+private func allocBuiltinQueues () {
+  dispatch_once(&allocBuiltinQueuesOnce) {
+    kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground
+  }
+}

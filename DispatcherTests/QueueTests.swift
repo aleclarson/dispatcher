@@ -44,6 +44,7 @@ class QueueTests: XCTestCase {
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
+  // +Queue.concurrent(_:)
   func testConcurrentQueue () {
 
     let n = Lock(0)

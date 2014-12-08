@@ -24,7 +24,6 @@
 		11A434411A33AFAF00D155DB /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434401A33AFAF00D155DB /* TestHelpers.swift */; };
 		11A434451A33BCEF00D155DB /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434431A33BBE300D155DB /* Lock.swift */; };
 		11F93BBE1A36070D00ABBD4E /* LockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F93BBD1A36070D00ABBD4E /* LockTests.swift */; };
-		11FCFA811A36219C00D5CD93 /* Once.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FCFA801A36219C00D5CD93 /* Once.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,7 +58,6 @@
 		11A434401A33AFAF00D155DB /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		11A434431A33BBE300D155DB /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = SOURCE_ROOT; };
 		11F93BBD1A36070D00ABBD4E /* LockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockTests.swift; sourceTree = "<group>"; };
-		11FCFA801A36219C00D5CD93 /* Once.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Once.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +103,6 @@
 				115F88941A351AD200028812 /* Dispatcher.swift */,
 				11A434321A33814800D155DB /* Thread.swift */,
 				1123A3DA19F1535900BF890F /* Queue.swift */,
-				11FCFA801A36219C00D5CD93 /* Once.swift */,
 				1123A3DB19F1535900BF890F /* Work.swift */,
 				1183134E19F342CE002C2F0A /* Timer.swift */,
 				11A434431A33BBE300D155DB /* Lock.swift */,
@@ -272,7 +269,6 @@
 				1123A3DE19F1535900BF890F /* Work.swift in Sources */,
 				11A434451A33BCEF00D155DB /* Lock.swift in Sources */,
 				11A4343B1A3381F400D155DB /* NSThread.m in Sources */,
-				11FCFA811A36219C00D5CD93 /* Once.swift in Sources */,
 				115F88911A34C73200028812 /* Job.swift in Sources */,
 				1183134F19F342CE002C2F0A /* Timer.swift in Sources */,
 			);
