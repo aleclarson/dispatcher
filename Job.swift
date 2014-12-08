@@ -50,21 +50,11 @@ public class Job <In, Out> {
 
 
 
-  // MARK: Destructor
-
-  deinit {
-    assert(_started.value, "a Job cannot deinit before it is started")
-  }
-
-
-
   // MARK: Private
 
   private typealias Task = (In, Out -> Void) -> Void
 
   private let _task: Task
-
-  private var _started = Lock(false)
 
   private var _self: Job! // retain cycle to stay alive
 
@@ -80,11 +70,6 @@ public class Job <In, Out> {
   }
 
   private func _perform (args: In) {
-    _started.lock {
-      isPerformed in
-      assert(!isPerformed, "a Job cannot be started more than once")
-      isPerformed = true
-    }
     _task(args, _finish)
   }
 
@@ -129,10 +114,6 @@ extension Thread {
 
     func perform () {
       job.perform()
-    }
-
-    deinit {
-      assert(job._started.value)
     }
   }
 }
