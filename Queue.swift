@@ -15,7 +15,7 @@ public class Queue : Dispatcher {
     }
   }
 
-  public override var isCurrent: Bool { return dispatch_get_specific(&kQueueCurrentKey) == getMutablePointer(self) }
+  public override var isCurrent: Bool { return kQueueCurrent == getMutablePointer(self) }
 
   /// If `true`, this Queue always executes one task at a time.
   public let isSerial: Bool
@@ -163,6 +163,15 @@ public class Queue : Dispatcher {
   }
 }
 
+var kQueueCurrent: UnsafeMutablePointer<Void> {
+  dispatch_once(&kQueueBuiltin) { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground }
+  return dispatch_get_specific(&kQueueCurrentKey)
+}
+
+func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
+  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
+}
+
 private let kQueueMain = Queue(.Main)
 
 private let kQueueHigh = Queue(.High)
@@ -173,8 +182,6 @@ private let kQueueLow = Queue(.Low)
 
 private let kQueueBackground = Queue(.Background)
 
-var kQueueCurrentKey = 0
+private var kQueueCurrentKey = 0
 
-func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
-}
+private var kQueueBuiltin = dispatch_once_t()
