@@ -39,15 +39,9 @@ public class Queue : Dispatcher {
     assert(!isSerial, "a barrier is pointless on a serial queue")
     assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
     dispatch_barrier_async(core) {
-      objc_sync_enter(self)
-      self._isBlocked = true // Block this queue
-      objc_sync_exit(self)
-
+      self._isBlocked.value = true // Block this queue
       job.perform()
-
-      objc_sync_enter(self)
-      self._isBlocked = false // Unblock this queue
-      objc_sync_exit(self)
+      self._isBlocked.value = false // Unblock this queue
     }
     return job
   }

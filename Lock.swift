@@ -25,8 +25,8 @@ public class Lock <T> {
     _write { block(&self._value) }
   }
 
-  public init (_ defaultValue: T! = nil, serial: Bool = false, priority: Queue.Priority! = nil) {
-    _queue = Queue(serial, priority ?? Queue.current.priority)
+  public init (_ defaultValue: T! = nil, serial: Bool = false) {
+    if !serial { _queue = Queue(false, Queue.current.priority) }
     _value = defaultValue
   }
 
@@ -34,15 +34,19 @@ public class Lock <T> {
 
   // MARK: Private
 
-  private let _queue: Queue
-
-  private var _write: AnyJob.Bridge {
-    return _queue.isSerial ? _queue.sync : _queue.barrier
-  }
-
-  private var _read: AnyJob.Bridge {
-    return _queue.sync
-  }
-
   private var _value: T!
+
+  private let _queue: Queue!
+
+  private func _write (block: Void -> Void) {
+    _queue?.barrier(block) ?? _sync(block)
+  }
+
+  private func _read (block: Void -> Void) {
+    _queue?.sync(block) ?? _sync(block)
+  }
+
+  private func _sync (block: Void -> Void) {
+    objc_sync_enter(self); block(); objc_sync_exit(self)
+  }
 }

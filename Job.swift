@@ -58,11 +58,11 @@ public class Job <In, Out> {
 
   private var _self: Job! // retain cycle to stay alive
 
-  private let _result = Lock<Out>()
+  private let _result = Lock<Out>(serial: true)
 
-  private let _next = Lock<AnyJob>() // job depends on you
+  private let _next = Lock<AnyJob>(serial: true) // job depends on you
 
-  private let _prev = Lock<AnyJob>() // job you depend on
+  private let _prev = Lock<AnyJob>(serial: true) // job you depend on
 
   private init (_ work: Task) {
     _task = work
