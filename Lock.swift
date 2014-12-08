@@ -26,7 +26,7 @@ public class Lock <T> {
   }
 
   public init (_ defaultValue: T! = nil, _ serial: Bool = false) {
-    _queue = (serial ? Queue.serial : Queue.concurrent)(Queue.current.priority)
+    _queue = Queue(serial, Queue.current.priority)
     _value = defaultValue
   }
 
