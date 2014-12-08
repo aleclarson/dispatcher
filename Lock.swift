@@ -2,16 +2,20 @@
 /// Synchronizes a value across Threads.
 public class Lock<T> {
 
-  /// Acquires a lock on the value.
-  public var value: T! {
-    get {
-      var value: T!
-      _queue.sync { value = self._value }
-      return value
-    }
-    set {
-      _write { self._value = newValue }
-    }
+  public var get: T! {
+    var value: T!
+    _queue.sync { value = self._value }
+    return value
+  }
+
+  public func set (newValue: T!) {
+    _write { self._value = newValue }
+  }
+
+  /// Combines a read and write into a single transaction to save time.
+  /// Keep your block as short as possible.
+  public func set (block: (inout T!) -> Void) {
+    _write { block(&self._value) }
   }
 
   /// If `serial` equals `true`, everything blocks everything.
@@ -22,13 +26,11 @@ public class Lock<T> {
     _value = defaultValue
   }
 
-  /// Combines a read and write into a single transaction to save time.
-  /// Keep your block as short as possible.
-  public func write (block: (inout T!) -> Void) {
-    _write { block(&self._value) }
-  }
 
-  private let _write: (Void -> Void) -> Void
+
+  // MARK: Private
+
+  private let _write: AnyJob.Wrapper
 
   private let _queue: Queue
 

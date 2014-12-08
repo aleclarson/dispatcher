@@ -12,6 +12,8 @@
 		1123A3CF19F14B3F00BF890F /* Dispatcher.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1123A3A719F1404E00BF890F /* Dispatcher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1123A3DD19F1535900BF890F /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* Queue.swift */; };
 		1123A3DE19F1535900BF890F /* Work.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* Work.swift */; };
+		115F88911A34C73200028812 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115F88901A34C73200028812 /* Job.swift */; };
+		115F88951A351AD200028812 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115F88941A351AD200028812 /* Dispatcher.swift */; };
 		1183134F19F342CE002C2F0A /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183134E19F342CE002C2F0A /* Timer.swift */; };
 		1183135119F354C4002C2F0A /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135019F354C4002C2F0A /* TimerTests.swift */; };
 		1183135319F35B54002C2F0A /* WorkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135219F35B54002C2F0A /* WorkTests.swift */; };
@@ -43,6 +45,8 @@
 		1123A3D719F1532F00BF890F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		1123A3DA19F1535900BF890F /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = SOURCE_ROOT; };
 		1123A3DB19F1535900BF890F /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = SOURCE_ROOT; };
+		115F88901A34C73200028812 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = SOURCE_ROOT; };
+		115F88941A351AD200028812 /* Dispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = SOURCE_ROOT; };
 		1183134E19F342CE002C2F0A /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = SOURCE_ROOT; };
 		1183135019F354C4002C2F0A /* TimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
 		1183135219F35B54002C2F0A /* WorkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkTests.swift; sourceTree = "<group>"; };
@@ -94,11 +98,13 @@
 		1123A3A819F1404F00BF890F /* Dispatcher */ = {
 			isa = PBXGroup;
 			children = (
+				115F88941A351AD200028812 /* Dispatcher.swift */,
 				11A434321A33814800D155DB /* Thread.swift */,
 				1123A3DA19F1535900BF890F /* Queue.swift */,
 				1123A3DB19F1535900BF890F /* Work.swift */,
 				1183134E19F342CE002C2F0A /* Timer.swift */,
 				11A434431A33BBE300D155DB /* Lock.swift */,
+				115F88901A34C73200028812 /* Job.swift */,
 				11A4343A1A3381F400D155DB /* NSThread.m */,
 				11A4343C1A3381FE00D155DB /* NSThread.h */,
 				11A4343E1A33825500D155DB /* Dispatcher.h */,
@@ -256,9 +262,11 @@
 			files = (
 				1123A3DD19F1535900BF890F /* Queue.swift in Sources */,
 				11A434331A33814800D155DB /* Thread.swift in Sources */,
+				115F88951A351AD200028812 /* Dispatcher.swift in Sources */,
 				1123A3DE19F1535900BF890F /* Work.swift in Sources */,
 				11A434451A33BCEF00D155DB /* Lock.swift in Sources */,
 				11A4343B1A3381F400D155DB /* NSThread.m in Sources */,
+				115F88911A34C73200028812 /* Job.swift in Sources */,
 				1183134F19F342CE002C2F0A /* Timer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
