@@ -17,19 +17,17 @@ class LockTests : XCTestCase {
 
     Queue.medium.async {
       n.lock { n in
-        Timer(0.5) {
-          XCTAssert(n)
+        Queue.current.suspend()
+        let _ = Timer(0.3) {
+          XCTAssert(n == 0)
+          n = 10
+          Queue.current.resume()
         }
-        return
       }
     }
 
     Queue.low.async {
-
-    }
-
-    Queue.background.async {
-
+      XCTAssert(n.value == 10)
     }
   }
 }

@@ -45,7 +45,7 @@ class QueueTests: XCTestCase {
 
     let queue = Queue.concurrent(.High)
 
-    queue.async {
+//    queue.async {
   }
 
   // +Queue.serial(_:)
