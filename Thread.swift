@@ -30,7 +30,7 @@ public class Thread : Dispatcher {
   // MARK: Class Methods
 
   /// Wraps an NSThread with a Thread and caches the result.
-  /// If the NSThread has been wrapped earlier, the cached result is used.
+  /// If the NSThread has been wrapped already, the cached result is used.
   /// Avoid creating and wrapping your own NSThreads in favor of using a serial Queue.
   public class func wrap (thread: NSThread) -> Thread {
     let id = ObjectIdentifier(thread)
