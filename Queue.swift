@@ -165,7 +165,7 @@ public class Queue : Dispatcher {
   // MARK: Private
 
   private func _register () {
-    dispatch_queue_set_specific(core, &kQueueCurrentKey, pointerFromObject(self), nil)
+    dispatch_queue_set_specific(core, kQueueCurrentKey, pointerFromObject(self), nil)
   }
 
   private func _didSetPriority () {
