@@ -39,7 +39,8 @@ class TimerTests: XCTestCase {
   func testFire () {
   
     let timer = Timer(1) {
-      self.calls += 1
+      self.calls += 1;
+      println("calls = \(self.calls)")
     }
 
     timer.fire()
