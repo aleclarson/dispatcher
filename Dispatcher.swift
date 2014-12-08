@@ -52,15 +52,13 @@ public class Dispatcher {
 
   // MARK: Internal
 
-  let _isBlocked = Lock(false)
+  var _isBlocked: Lock<Bool>!
 
   func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
     fatalError("Must override.")
   }
 
-  init () {
-    println("Dispatcher.init")
-  }
+  init () {}
 
 
 

@@ -136,6 +136,7 @@ public class Queue : Dispatcher {
     core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
     self.priority = priority
     super.init()
+    _isBlocked = Lock(false, priority: priority)
     _register()
   }
 
@@ -143,12 +144,12 @@ public class Queue : Dispatcher {
   init (_ serial: Bool, _ priority: Priority) {
     isBuiltin = false
     isSerial = serial
-    core = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
+    core = dispatch_queue_create(nil, isSerial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
     self.priority = priority
     super.init()
     _didSetPriority()
+    _isBlocked = Lock(false, priority: priority)
     _register()
-    if true {}
   }
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {

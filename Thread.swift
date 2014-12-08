@@ -58,6 +58,7 @@ public class Thread : Dispatcher {
   private init (_ thread: NSThread) {
     core = thread
     super.init()
+    _isBlocked = Lock(false)
   }
 }
 

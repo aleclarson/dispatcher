@@ -25,8 +25,8 @@ public class Lock <T> {
     _write { block(&self._value) }
   }
 
-  public init (_ defaultValue: T! = nil, _ serial: Bool = false) {
-    _queue = Queue(serial, Queue.current.priority)
+  public init (_ defaultValue: T! = nil, serial: Bool = false, priority: Queue.Priority = Queue.current.priority) {
+    _queue = Queue(serial, priority)
     _value = defaultValue
   }
 
