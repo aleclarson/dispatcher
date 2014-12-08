@@ -11,7 +11,15 @@ class QueueTests: XCTestCase {
 
     Queue.medium.async {
       XCTAssert(Queue.medium.isCurrent)
+
+      Queue.main.sync {
+        XCTAssert(Queue.main.isCurrent)
+
+        e.fulfill()
+      }
     }
+
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 
   // +Queue.current
@@ -31,7 +39,16 @@ class QueueTests: XCTestCase {
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
-  //
+  func testConcurrentQueue () {
+
+    let n = Lock(0)
+
+    let queue = Queue.concurrent(.High)
+
+    queue.async {
+  }
+
+  // +Queue.serial(_:)
   func testSerialQueue () {
 
     var n = 0

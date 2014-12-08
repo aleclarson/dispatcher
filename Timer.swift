@@ -32,7 +32,7 @@ public class Timer {
 
   // MARK: Read-only
 
-  public var isActive: Bool { return _isActive.get }
+  public var isActive: Bool { return _isActive.value }
 
   public let tolerance: Seconds
   
@@ -56,7 +56,7 @@ public class Timer {
   
   public func stop () {
     if isActive { return }
-    _isActive.set(true)
+    _isActive.value = true
     dispatch_source_cancel(_source)
     activeTimers[ObjectIdentifier(self)] = nil
   }

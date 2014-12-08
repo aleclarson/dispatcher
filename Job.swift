@@ -13,13 +13,13 @@ public class Job <In, Out> {
   /// Performs this Job's task immediately.
   /// If this Job is dependent on another Job, that Job will be performed first.
   public func perform () {
-    if let prev = _prev.get {
-      if let result = prev._result.get {
+    if let prev = _prev.value {
+      if let result = prev._result.value {
         _perform(result as In)
       } else {
         prev.perform()
       }
-      _prev.set(nil)
+      _prev.value = nil
     } else {
       _perform(() as In)
     }
@@ -53,7 +53,7 @@ public class Job <In, Out> {
   // MARK: Destructor
 
   deinit {
-    assert(_started.get, "a Job cannot deinit before it is started")
+    assert(_started.value, "a Job cannot deinit before it is started")
   }
 
 
@@ -80,7 +80,7 @@ public class Job <In, Out> {
   }
 
   private func _perform (args: In) {
-    _started.set {
+    _started.lock {
       isPerformed in
       assert(!isPerformed, "a Job cannot be started more than once")
       isPerformed = true
@@ -90,9 +90,9 @@ public class Job <In, Out> {
 
   private func _finish (result: Out) {
 
-    _result.set(result)
+    _result.value = result
 
-    _next.set { job in
+    _next.lock { job in
       if job == nil { return }
       job._perform(result)
       job = nil
@@ -104,12 +104,12 @@ public class Job <In, Out> {
   private func _next <NextOut> (job: Job<Out,NextOut>) -> Job<Out,NextOut> {
 
     // Perform the next Job immediately if this Job is already finished.
-    if let result = _result.get { job._perform(result) }
+    if let result = _result.value { job._perform(result) }
 
     // Else store the next Job until this Job finishes.
     else {
-      _next.set(unsafeBitCast(job, AnyJob.self))
-      job._prev.set(unsafeBitCast(self, AnyJob.self))
+      _next.value = unsafeBitCast(job, AnyJob.self)
+      job._prev.value = unsafeBitCast(self, AnyJob.self)
     }
 
     return job
@@ -132,7 +132,7 @@ extension Thread {
     }
 
     deinit {
-      assert(job._started.get)
+      assert(job._started.value)
     }
   }
 }

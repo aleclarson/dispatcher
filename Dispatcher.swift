@@ -12,7 +12,7 @@ public class Dispatcher {
   }
 
   public var isBlocked: Bool {
-    return _isBlocked.get
+    return _isBlocked.value
   }
 
   /// If this Dispatcher is the current one, the callback is called immediately.
@@ -66,7 +66,7 @@ public class Dispatcher {
 
   private func _block (task: Void -> Void) {
 
-    _isBlocked.set { isBlocked in
+    _isBlocked.lock { isBlocked in
       assert(!isBlocked, "blocking a blocked Dispatcher causes a deadlock")
 
       // Block the current Dispatcher
@@ -76,6 +76,6 @@ public class Dispatcher {
     task()
 
     // Unblock the current Dispatcher
-    _isBlocked.set(false)
+    _isBlocked.value = false
   }
 }
