@@ -96,7 +96,7 @@ class TimerTests: XCTestCase {
 
     timer = Timer(Seconds(expectedDelay)) {
       actualDelay = CFAbsoluteTimeGetCurrent() - startTime
-      println("actualDelay = \(actualDelay)")
+      println("actualDelay = \(actualDelay)\n")
       XCTAssert(actualDelay == expectedDelay)
       e.fulfill()
     }

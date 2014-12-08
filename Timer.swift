@@ -20,10 +20,14 @@ public class Timer {
       return
     }
 
-    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
-    dispatch_source_set_timer(_source, dispatch_time(DISPATCH_TIME_NOW, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
-    dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire(true) }
-    dispatch_resume(_source)
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Seconds(NSEC_PER_SEC) * delay)), timerQueue.core) {
+      [weak self] in let _ = self?.fire(true)
+    }
+
+//    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
+//    dispatch_source_set_timer(_source, dispatch_time(DISPATCH_TIME_NOW, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
+//    dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire(true) }
+//    dispatch_resume(_source)
 
     activeTimers[ObjectIdentifier(self)] = self
   }
