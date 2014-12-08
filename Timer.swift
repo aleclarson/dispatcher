@@ -20,9 +20,6 @@ public class Timer {
       return
     }
 
-    _callingThread = Thread.current
-    _callingQueue = Queue.current
-
     _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
     dispatch_source_set_timer(_source, dispatch_walltime(nil, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
     dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire() }
@@ -53,7 +50,7 @@ public class Timer {
   public func fire () {
     if isActive { return }
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
-    _callingQueue?.async(callback) ?? _callingThread?.async(callback)
+    _callingDispatcher.async(callback)
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
   }
   
@@ -72,9 +69,7 @@ public class Timer {
 
   private var _isActive = Lock(false)
 
-  private var _callingThread: Thread!
-
-  private var _callingQueue: Queue!
+  private let _callingDispatcher = Dispatcher.current
 
   private var _shouldRepeat = false
 
