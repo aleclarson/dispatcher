@@ -49,6 +49,7 @@ public class Timer {
   
   public func fire () {
     if isActive { return }
+    let queue = Queue.current
     if _shouldRepeat && _remainingRepeats > 0 { _remainingRepeats-- }
     _callingDispatcher.async(callback)
     if !_shouldRepeat || _remainingRepeats == 0 { stop() }
