@@ -30,11 +30,12 @@ class QueueTests: XCTestCase {
   // +Queue.current
   func testQueueCurrent () {
     let e = expectationWithDescription(nil)
-    XCTAssert(Queue.main === Queue.current)
+    let main = Queue.main
+    let current = Queue.current
+    XCTAssert(main === current)
 
     Queue.medium.async {
-      XCTAssert(Queue.main !== Queue.current)
-
+      XCTAssert(Queue.medium === Queue.current)
       e.fulfill()
     }
 
