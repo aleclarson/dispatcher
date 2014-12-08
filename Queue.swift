@@ -148,7 +148,7 @@ public class Queue : Dispatcher {
   }
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
-    (asynchronous ? dispatch_async : dispatch_sync)(core, job.perform)
+    (asynchronous ? dispatch_async : dispatch_sync)(core) { job.perform() }
   }
 
 
