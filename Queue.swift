@@ -202,6 +202,7 @@ private func objectFromPointer <T:AnyObject> (pointer: UnsafeMutablePointer<Void
 
 private func allocBuiltinQueues () {
   dispatch_once(&allocBuiltinQueuesOnce) {
-    kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground
+    kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground;
+    println("Allocated built-in queues!")
   }
 }
