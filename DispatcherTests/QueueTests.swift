@@ -5,6 +5,11 @@ import Dispatcher
 
 class QueueTests: XCTestCase {
 
+  // +Queue.main
+  func testQueueMain () {
+    XCTAssert(Queue.main.isMain)
+  }
+
   // -Queue.isCurrent
   func testQueueIsCurrent () {
     let e = expectationWithDescription(nil)
