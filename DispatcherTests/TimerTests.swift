@@ -38,12 +38,14 @@ class TimerTests: XCTestCase {
 
   func testFire () {
   
-    timer = Timer(1) { self.calls += 1 }
+    let timer = Timer(1) {
+      self.calls += 1
+    }
 
     timer.fire()
+    XCTAssert(calls == 1)
 
     timer.fire() // Should not do anything.
-
     XCTAssert(calls == 1)
   }
 
