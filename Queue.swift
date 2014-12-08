@@ -15,7 +15,7 @@ public class Queue : Dispatcher {
     }
   }
 
-  public override var isCurrent: Bool { return kQueueCurrent == pointerFromObject(self) }
+  public override var isCurrent: Bool { return kQueueCurrent === self }
 
   /// If `true`, this Queue always executes one task at a time.
   public let isSerial: Bool
@@ -69,10 +69,7 @@ public class Queue : Dispatcher {
   // MARK: Class Variables
 
   /// Returns `nil` if the current Thread was not created by a Queue; normally this doesn't happen.
-  public override class var current: Queue! {
-    let queue = kQueueCurrent
-    return objectFromPointer(kQueueCurrent)
-  }
+  public override class var current: Queue! { return kQueueCurrent }
 
   public class var main: Queue { return kQueueMain }
 
@@ -165,7 +162,7 @@ public class Queue : Dispatcher {
   // MARK: Private
 
   private func _register () {
-    dispatch_queue_set_specific(core, kQueueCurrentKey, pointerFromObject(self), nil)
+
   }
 
   private func _didSetPriority () {
@@ -173,9 +170,14 @@ public class Queue : Dispatcher {
   }
 }
 
-var kQueueCurrent: UnsafeMutablePointer<Void> {
-  allocBuiltinQueues()
-  return dispatch_get_specific(kQueueCurrentKey)
+var kQueueCurrent: Queue! {
+  get {
+    allocBuiltinQueues()
+    return objectFromPointer(dispatch_get_specific(kQueueCurrentKey))
+  }
+  set {
+    dispatch_queue_set_specific(newValue.core, kQueueCurrentKey, pointerFromObject(newValue), nil)
+  }
 }
 
 private let kQueueMain = Queue(.Main)
