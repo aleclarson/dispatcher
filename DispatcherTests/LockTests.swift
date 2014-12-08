@@ -13,21 +13,28 @@ class LockTests : XCTestCase {
   }
 
   func testSerialLock () {
-    let n = Lock(0)
+    let e = expectationWithDescription(nil)
+
+    let start = 0
+    let end = 10
+    let current = Lock(start)
 
     Queue.medium.async {
-      n.lock { n in
+      current.lock { current in
         Queue.current.suspend()
         let _ = Timer(0.3) {
-          XCTAssert(n == 0)
-          n = 10
+          XCTAssert(current == start)
+          current = end
           Queue.current.resume()
         }
       }
     }
 
     Queue.low.async {
-      XCTAssert(n.value == 10)
+      XCTAssert(current.value == end)
+      e.fulfill()
     }
+
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 }
