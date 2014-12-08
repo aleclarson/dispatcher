@@ -38,7 +38,10 @@ class QueueTests: XCTestCase {
 
     Queue.medium.async {
       XCTAssert(Queue.medium === Queue.current)
-      e.fulfill()
+
+      Queue.main.async {
+        e.fulfill()
+      }
     }
 
     waitForExpectationsWithTimeout(1, handler: nil)
