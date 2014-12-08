@@ -1,16 +1,13 @@
 <img src="http://i.imgur.com/sEM1zbl.jpg"/>
 
-**Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html) by introducing 4 new Swift classes.
+**Queue**: multi-threaded dispatcher
+**Thread**: single-threaded dispatcher
+**Dispatcher**: serial/concurrent task execution
 
-#### [Dispatcher](https://github.com/aleclarson/dispatcher/wiki/Dispatcher)
-
-#### [Queue](https://github.com/aleclarson/dispatcher/wiki/Queue)
-
-#### [Group](https://github.com/aleclarson/dispatcher/wiki/Group)
-
-#### [Timer](https://github.com/aleclarson/dispatcher/wiki/Timer)
-
----
+**Job**: task chaining
+**Lock**: resource synchronization
+**Timer**: delayed closures
+**Work**: task groups
 
 #### Installation
 

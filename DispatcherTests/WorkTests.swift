@@ -3,25 +3,25 @@ import UIKit
 import XCTest
 import Dispatcher
 
-class DispatchGroupTests: XCTestCase {
+class WorkTests: XCTestCase {
 
-  var group: DispatchGroup!
+  var work: Work!
 
   override func tearDown() {
-    group = nil
+    work = nil
     super.tearDown()
   }
 
-  func testDispatchGroup () {
+  func testWork () {
     let expectation = expectationWithDescription(nil)
 
-    group = DispatchGroup()
+    work = Work()
 
-    group++
+    work++
 
-    group.done(expectation.fulfill)
+    work.done(expectation.fulfill)
 
-    group--
+    work--
 
     waitForExpectationsWithTimeout(1) { XCTAssertNil($0) }
   }
@@ -29,16 +29,16 @@ class DispatchGroupTests: XCTestCase {
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
-    group = DispatchGroup(2)
+    work = Work(2)
 
-    gcd.async {
-      self.group--
-      gcd.main.sync {
-        self.group--
+    Queue.medium.async {
+      self.work--
+      Queue.main.async {
+        self.work--
       }
     }
 
-    group.done(expectation.fulfill)
+    work.done(expectation.fulfill)
 
     waitForExpectationsWithTimeout(1) { XCTAssertNil($0) }
   }

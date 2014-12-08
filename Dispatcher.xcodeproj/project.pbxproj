@@ -7,30 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1123A3B819F1404F00BF890F /* DispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3B719F1404F00BF890F /* DispatcherTests.swift */; };
+		1123A3B819F1404F00BF890F /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3B719F1404F00BF890F /* QueueTests.swift */; };
 		1123A3CD19F14B3400BF890F /* Dispatcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123A3A719F1404E00BF890F /* Dispatcher.framework */; };
 		1123A3CF19F14B3F00BF890F /* Dispatcher.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1123A3A719F1404E00BF890F /* Dispatcher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1123A3D919F1532F00BF890F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1123A3D719F1532F00BF890F /* Info.plist */; };
-		1123A3DD19F1535900BF890F /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* DispatchQueue.swift */; };
-		1123A3DE19F1535900BF890F /* DispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* DispatchGroup.swift */; };
-		1123A3DF19F1535900BF890F /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DC19F1535900BF890F /* Dispatcher.swift */; };
-		1183134F19F342CE002C2F0A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183134E19F342CE002C2F0A /* DispatchTimer.swift */; };
-		1183135119F354C4002C2F0A /* DispatchTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135019F354C4002C2F0A /* DispatchTimerTests.swift */; };
-		1183135319F35B54002C2F0A /* DispatchGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135219F35B54002C2F0A /* DispatchGroupTests.swift */; };
-		11EABE2719F32F60003A1AD6 /* Dispatcher.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DC19F1535900BF890F /* Dispatcher.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		11EABE2819F32F60003A1AD6 /* DispatchQueue.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* DispatchQueue.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		11EABE2919F32F60003A1AD6 /* DispatchGroup.swift in Headers */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* DispatchGroup.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		1123A3DD19F1535900BF890F /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* Queue.swift */; };
+		1123A3DE19F1535900BF890F /* Work.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* Work.swift */; };
+		115F88911A34C73200028812 /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115F88901A34C73200028812 /* Job.swift */; };
+		115F88951A351AD200028812 /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115F88941A351AD200028812 /* Dispatcher.swift */; };
+		1183134F19F342CE002C2F0A /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183134E19F342CE002C2F0A /* Timer.swift */; };
+		1183135119F354C4002C2F0A /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135019F354C4002C2F0A /* TimerTests.swift */; };
+		1183135319F35B54002C2F0A /* WorkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183135219F35B54002C2F0A /* WorkTests.swift */; };
+		11A434331A33814800D155DB /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434321A33814800D155DB /* Thread.swift */; };
+		11A4343B1A3381F400D155DB /* NSThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A4343A1A3381F400D155DB /* NSThread.m */; };
+		11A4343D1A33821D00D155DB /* NSThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 11A4343C1A3381FE00D155DB /* NSThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		11A4343F1A33827A00D155DB /* Dispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 11A4343E1A33825500D155DB /* Dispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		11A434411A33AFAF00D155DB /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434401A33AFAF00D155DB /* TestHelpers.swift */; };
+		11A434451A33BCEF00D155DB /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434431A33BBE300D155DB /* Lock.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		1123A3CB19F14B2F00BF890F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1123A32E19F13F6700BF890F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1123A3A619F1404E00BF890F;
-			remoteInfo = Dispatcher;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		1123A3CE19F14B3600BF890F /* CopyFiles */ = {
@@ -48,14 +41,21 @@
 /* Begin PBXFileReference section */
 		1123A3A719F1404E00BF890F /* Dispatcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Dispatcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1123A3B119F1404F00BF890F /* DispatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DispatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1123A3B719F1404F00BF890F /* DispatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatcherTests.swift; sourceTree = "<group>"; };
+		1123A3B719F1404F00BF890F /* QueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		1123A3D719F1532F00BF890F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		1123A3DA19F1535900BF890F /* DispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = SOURCE_ROOT; };
-		1123A3DB19F1535900BF890F /* DispatchGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchGroup.swift; sourceTree = SOURCE_ROOT; };
-		1123A3DC19F1535900BF890F /* Dispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = SOURCE_ROOT; };
-		1183134E19F342CE002C2F0A /* DispatchTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTimer.swift; sourceTree = SOURCE_ROOT; };
-		1183135019F354C4002C2F0A /* DispatchTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchTimerTests.swift; sourceTree = "<group>"; };
-		1183135219F35B54002C2F0A /* DispatchGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchGroupTests.swift; sourceTree = "<group>"; };
+		1123A3DA19F1535900BF890F /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = SOURCE_ROOT; };
+		1123A3DB19F1535900BF890F /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = SOURCE_ROOT; };
+		115F88901A34C73200028812 /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = SOURCE_ROOT; };
+		115F88941A351AD200028812 /* Dispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatcher.swift; sourceTree = SOURCE_ROOT; };
+		1183134E19F342CE002C2F0A /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = SOURCE_ROOT; };
+		1183135019F354C4002C2F0A /* TimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
+		1183135219F35B54002C2F0A /* WorkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkTests.swift; sourceTree = "<group>"; };
+		11A434321A33814800D155DB /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = SOURCE_ROOT; };
+		11A4343A1A3381F400D155DB /* NSThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSThread.m; sourceTree = SOURCE_ROOT; };
+		11A4343C1A3381FE00D155DB /* NSThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSThread.h; sourceTree = SOURCE_ROOT; };
+		11A4343E1A33825500D155DB /* Dispatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dispatcher.h; sourceTree = SOURCE_ROOT; };
+		11A434401A33AFAF00D155DB /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		11A434431A33BBE300D155DB /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,10 +98,16 @@
 		1123A3A819F1404F00BF890F /* Dispatcher */ = {
 			isa = PBXGroup;
 			children = (
-				1123A3DC19F1535900BF890F /* Dispatcher.swift */,
-				1123A3DA19F1535900BF890F /* DispatchQueue.swift */,
-				1123A3DB19F1535900BF890F /* DispatchGroup.swift */,
-				1183134E19F342CE002C2F0A /* DispatchTimer.swift */,
+				115F88941A351AD200028812 /* Dispatcher.swift */,
+				11A434321A33814800D155DB /* Thread.swift */,
+				1123A3DA19F1535900BF890F /* Queue.swift */,
+				1123A3DB19F1535900BF890F /* Work.swift */,
+				1183134E19F342CE002C2F0A /* Timer.swift */,
+				11A434431A33BBE300D155DB /* Lock.swift */,
+				115F88901A34C73200028812 /* Job.swift */,
+				11A4343A1A3381F400D155DB /* NSThread.m */,
+				11A4343C1A3381FE00D155DB /* NSThread.h */,
+				11A4343E1A33825500D155DB /* Dispatcher.h */,
 				1123A3D719F1532F00BF890F /* Info.plist */,
 			);
 			path = Dispatcher;
@@ -110,9 +116,10 @@
 		1123A3B419F1404F00BF890F /* DispatcherTests */ = {
 			isa = PBXGroup;
 			children = (
-				1123A3B719F1404F00BF890F /* DispatcherTests.swift */,
-				1183135019F354C4002C2F0A /* DispatchTimerTests.swift */,
-				1183135219F35B54002C2F0A /* DispatchGroupTests.swift */,
+				1123A3B719F1404F00BF890F /* QueueTests.swift */,
+				1183135019F354C4002C2F0A /* TimerTests.swift */,
+				1183135219F35B54002C2F0A /* WorkTests.swift */,
+				11A434401A33AFAF00D155DB /* TestHelpers.swift */,
 			);
 			path = DispatcherTests;
 			sourceTree = "<group>";
@@ -124,9 +131,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11EABE2719F32F60003A1AD6 /* Dispatcher.swift in Headers */,
-				11EABE2819F32F60003A1AD6 /* DispatchQueue.swift in Headers */,
-				11EABE2919F32F60003A1AD6 /* DispatchGroup.swift in Headers */,
+				11A4343D1A33821D00D155DB /* NSThread.h in Headers */,
+				11A4343F1A33827A00D155DB /* Dispatcher.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +154,7 @@
 				1123A3A319F1404E00BF890F /* Frameworks */,
 				1123A3A419F1404E00BF890F /* Headers */,
 				1123A3A519F1404E00BF890F /* Resources */,
+				11E71FAC19FE71CC00F58A01 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -171,7 +178,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				1123A3CC19F14B2F00BF890F /* PBXTargetDependency */,
 			);
 			name = DispatcherTests;
 			productName = DispatcherTests;
@@ -189,6 +195,7 @@
 				TargetAttributes = {
 					1123A3A619F1404E00BF890F = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = SQQ8684MNF;
 					};
 					1123A3B019F1404F00BF890F = {
 						CreatedOnToolsVersion = 6.0;
@@ -220,7 +227,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1123A3D919F1532F00BF890F /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,15 +239,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		11E71FAC19FE71CC00F58A01 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "echo `sh ~/scripts/push_if_unclean.sh \"private\" \"unstable\"`";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1123A3A219F1404E00BF890F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1123A3DD19F1535900BF890F /* DispatchQueue.swift in Sources */,
-				1123A3DE19F1535900BF890F /* DispatchGroup.swift in Sources */,
-				1123A3DF19F1535900BF890F /* Dispatcher.swift in Sources */,
-				1183134F19F342CE002C2F0A /* DispatchTimer.swift in Sources */,
+				1123A3DD19F1535900BF890F /* Queue.swift in Sources */,
+				11A434331A33814800D155DB /* Thread.swift in Sources */,
+				115F88951A351AD200028812 /* Dispatcher.swift in Sources */,
+				1123A3DE19F1535900BF890F /* Work.swift in Sources */,
+				11A434451A33BCEF00D155DB /* Lock.swift in Sources */,
+				11A4343B1A3381F400D155DB /* NSThread.m in Sources */,
+				115F88911A34C73200028812 /* Job.swift in Sources */,
+				1183134F19F342CE002C2F0A /* Timer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,21 +275,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1183135319F35B54002C2F0A /* DispatchGroupTests.swift in Sources */,
-				1123A3B819F1404F00BF890F /* DispatcherTests.swift in Sources */,
-				1183135119F354C4002C2F0A /* DispatchTimerTests.swift in Sources */,
+				1183135319F35B54002C2F0A /* WorkTests.swift in Sources */,
+				1123A3B819F1404F00BF890F /* QueueTests.swift in Sources */,
+				1183135119F354C4002C2F0A /* TimerTests.swift in Sources */,
+				11A434411A33AFAF00D155DB /* TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		1123A3CC19F14B2F00BF890F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1123A3A619F1404E00BF890F /* Dispatcher */;
-			targetProxy = 1123A3CB19F14B2F00BF890F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1123A35319F13F6700BF890F /* Debug */ = {
@@ -272,7 +291,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -314,7 +332,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -347,6 +364,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -357,10 +375,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -372,16 +390,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -402,6 +421,7 @@
 				INFOPLIST_FILE = DispatcherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DispatcherExample.app/DispatcherExample";
 			};
 			name = Debug;
@@ -416,6 +436,7 @@
 				INFOPLIST_FILE = DispatcherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DispatcherExample.app/DispatcherExample";
 			};
 			name = Release;

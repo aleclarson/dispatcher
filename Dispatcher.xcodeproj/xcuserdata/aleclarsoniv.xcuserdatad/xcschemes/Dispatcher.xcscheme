@@ -20,6 +20,20 @@
                ReferencedContainer = "container:Dispatcher.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1123A3B019F1404F00BF890F"
+               BuildableName = "DispatcherTests.xctest"
+               BlueprintName = "DispatcherTests"
+               ReferencedContainer = "container:Dispatcher.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -29,6 +43,15 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1123A3A619F1404E00BF890F"
+            BuildableName = "Dispatcher.framework"
+            BlueprintName = "Dispatcher"
+            ReferencedContainer = "container:Dispatcher.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
