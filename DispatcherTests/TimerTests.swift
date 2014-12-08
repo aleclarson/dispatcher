@@ -43,10 +43,10 @@ class TimerTests: XCTestCase {
       println("calls = \(self.calls)")
     }
 
-    timer.fire()
+    timer?.fire()
     XCTAssert(calls == 1)
 
-    timer.fire() // Should not do anything.
+    timer?.fire() // Should not do anything.
     XCTAssert(calls == 1)
   }
 
