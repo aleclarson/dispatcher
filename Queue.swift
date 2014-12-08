@@ -9,9 +9,9 @@ public class Queue : Dispatcher {
 
   /// This can only be set if this Queue is serial and created by you.
   public var priority: Priority {
-    willSet {
+    didSet {
       assert(!isBuiltin, "not allowed to set the priority of a built-in queue")
-      dispatch_set_target_queue(core, newValue.builtin.core)
+      _didSetPriority()
     }
   }
 
@@ -131,21 +131,22 @@ public class Queue : Dispatcher {
 
   /// Initializes one of Apple's built-in queues.
   init (_ priority: Priority) {
-    self.priority = priority
     isBuiltin = true
     isSerial = priority == .Main
     core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
+    self.priority = priority
     super.init()
     _register()
   }
 
   /// Initializes a custom queue.
   init (_ serial: Bool, _ priority: Priority) {
-    self.priority = priority
     isBuiltin = false
     isSerial = serial
     core = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
+    self.priority = priority
     super.init()
+    _didSetPriority()
     _register()
   }
 
@@ -159,6 +160,10 @@ public class Queue : Dispatcher {
 
   private func _register () {
     dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)
+  }
+
+  private func _didSetPriority () {
+    dispatch_set_target_queue(core, priority.builtin.core)
   }
 }
 
