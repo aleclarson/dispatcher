@@ -64,9 +64,8 @@ public class Queue : Dispatcher {
 
   /// Returns `nil` if the current Thread was not created by a Queue; normally this doesn't happen.
   public override class var current: Queue! {
-    let queue = dispatch_get_specific(&kQueueCurrentKey)
-    if queue == nil { return nil }
-    return Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue()
+    let queue = kQueueCurrent
+    return queue != nil ? Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue() : nil
   }
 
   public class var main: Queue { return kQueueMain }
