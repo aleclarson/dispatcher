@@ -55,7 +55,11 @@ class QueueTests: XCTestCase {
 
     let queue = Queue.serial()
 
-    queue.async { XCTAssert(++n == 1) }
+    queue.async {
+      let _ = Timer(0.5) {
+        XCTAssert(++n == 1)
+      }
+    }
 
     queue.async { XCTAssert(++n == 2) }
 
