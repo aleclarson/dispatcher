@@ -1,10 +1,6 @@
 
 public typealias AnyJob = Job<Any,Any>
 
-func b () {
-  Queue.high.async {}
-}
-
 /// A closure that runs on either a Thread or Queue.
 /// A Job releases itself after performing its closure once.
 public class Job <In, Out> {

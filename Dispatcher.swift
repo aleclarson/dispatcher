@@ -38,15 +38,15 @@ public class Dispatcher {
     return job
   }
 
-  public func sync (closure: Void -> Void) {
+  public func syncv (closure: Void -> Void) {
     let _: Job<Void, Void> = sync(closure)
   }
 
-  public func async (closure: Void -> Void) {
+  public func asyncv (closure: Void -> Void) {
     let _: Job<Void, Void> = async(closure)
   }
 
-  public func csync (closure: Void -> Void) {
+  public func csyncv (closure: Void -> Void) {
     let _: Job<Void, Void> = csync(closure)
   }
 
