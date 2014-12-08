@@ -148,6 +148,7 @@ public class Queue : Dispatcher {
     super.init()
     _didSetPriority()
     _register()
+    if true {}
   }
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
