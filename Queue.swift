@@ -97,11 +97,11 @@ public class Queue : Dispatcher {
   // MARK: Nested Types
 
   public enum Priority {
-    case Background // Least important
-    case Low
-    case Medium
-    case High
     case Main // Most important
+    case High
+    case Medium
+    case Low
+    case Background // Least important
 
     public var core: dispatch_queue_priority_t! {
       switch self {
@@ -132,9 +132,9 @@ public class Queue : Dispatcher {
   /// Initializes one of Apple's built-in queues.
   init (_ priority: Priority) {
     self.priority = priority
+    isBuiltin = true
     isSerial = priority == .Main
     core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
-    isBuiltin = true
     super.init()
     _register()
   }
@@ -142,9 +142,9 @@ public class Queue : Dispatcher {
   /// Initializes a custom queue.
   init (_ serial: Bool, _ priority: Priority) {
     self.priority = priority
+    isBuiltin = false
     isSerial = serial
     core = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
-    isBuiltin = false
     super.init()
     _register()
   }
