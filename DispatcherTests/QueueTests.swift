@@ -5,16 +5,31 @@ import Dispatcher
 
 class QueueTests: XCTestCase {
 
+  // -Queue.isCurrent
   func testQueueIsCurrent () {
     XCTAssert(!Queue.medium.isCurrent)
-    Queue.medium.sync { XCTAssert(Queue.medium.isCurrent) }
+    Queue.medium.sync {
+      XCTAssert(Queue.medium.isCurrent)
+    }
   }
 
+  // +Queue.current
   func testQueueCurrent () {
-    XCTAssert(Queue.main.isCurrent)
-    Queue.medium.sync { XCTAssert(Queue.main !== Queue.current) }
+    let e = expectationWithDescription()
+
+    Queue.medium.async {
+      XCTAssert(Queue.main !=== Queue.current)
+      XCTAssert(Queue.medium === Queue.current)
+
+      Queue.main.sync {
+        XCTAssert(Queue.main === Queue.current)
+      }
+    }
+
+    waitForExpectationsWithTimeout(1)
   }
 
+  //
   func testSerialQueue () {
 
     var n = 0
