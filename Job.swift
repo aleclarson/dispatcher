@@ -99,6 +99,10 @@ public class Job <In, Out> {
 
     return job
   }
+
+  deinit {
+    if true {}
+  }
 }
 
 extension Thread {
