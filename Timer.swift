@@ -21,7 +21,7 @@ public class Timer {
     }
 
     _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, timerQueue.core)
-    dispatch_source_set_timer(_source, dispatch_walltime(nil, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
+    dispatch_source_set_timer(_source, dispatch_time(DISPATCH_TIME_NOW, 0), UInt64(delay * Seconds(NSEC_PER_SEC)), UInt64(tolerance * Seconds(NSEC_PER_SEC)))
     dispatch_source_set_event_handler(_source) { [weak self] in let _ = self?.fire() }
     dispatch_resume(_source)
 
