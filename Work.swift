@@ -15,6 +15,11 @@ public class Work {
   public func done (callback: Void -> Void) {
     dispatch_group_notify(core, Queue.current.core, callback)
   }
+
+  public func done <Out> (job: Job<Void, Out>) -> Job<Void, Out> {
+    done(job.perform)
+    return job
+  }
 }
 
 public postfix func ++ (work: Work) {
