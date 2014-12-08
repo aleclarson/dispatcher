@@ -21,7 +21,6 @@ class LockTests : XCTestCase {
 
     Queue.medium.async {
       current.lock { current in
-        Queue.current.suspend()
         let _ = Timer(0.3) {
           XCTAssert(current == start)
           current = end
