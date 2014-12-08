@@ -17,31 +17,37 @@ public class Dispatcher {
   /// If this Dispatcher is the current one, the callback is called immediately.
   /// Else, the callback is called synchronously on this Dispatcher.
   public func sync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    return _sync(closure)
+    let job = Job(closure)
+    isCurrent ? job.perform() : Dispatcher.current._block { self._perform(job, false) }
+    return job
   }
 
   /// Calls the callback asynchronously on this Queue.
   /// The Thread you call this from will continue without waiting for your closure to finish.
   public func async <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    return _async(closure)
+    let job = Job(closure)
+    _perform(job, true)
+    return job
   }
 
   /// If this Dispatcher is the current Dispatcher, the callback is called immediately.
   /// Else, the callback is called asynchronously on this Dispatcher.
   public func csync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    return _csync(closure)
+    let job = Job(closure)
+    isCurrent ? job.perform() : _perform(job, true)
+    return job
   }
 
-  public func sync (closure: Void -> Void) -> Job<Void, Void> {
-    return _sync(closure)
+  public func sync (closure: Void -> Void) {
+    let _: Job<Void, Void> = sync(closure)
   }
 
-  public func async (closure: Void -> Void) -> Job<Void, Void> {
-    return _async(closure)
+  public func async (closure: Void -> Void) {
+    let _: Job<Void, Void> = async(closure)
   }
 
-  public func csync (closure: Void -> Void) -> Job<Void, Void> {
-    return _csync(closure)
+  public func csync (closure: Void -> Void) {
+    let _: Job<Void, Void> = csync(closure)
   }
 
 
@@ -52,24 +58,6 @@ public class Dispatcher {
 
   func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
     fatalError("Must override.")
-  }
-
-  func _async <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
-    _perform(job, true)
-    return job
-  }
-
-  func _sync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
-    isCurrent ? job.perform() : Dispatcher.current._block { self._perform(job, false) }
-    return job
-  }
-
-  func _csync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
-    isCurrent ? job.perform() : _perform(job, true)
-    return job
   }
 
   init () {}
