@@ -58,7 +58,9 @@ public class Dispatcher {
     fatalError("Must override.")
   }
 
-  init () {}
+  init () {
+    println("Dispatcher.init")
+  }
 
 
 
