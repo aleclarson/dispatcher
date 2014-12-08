@@ -24,7 +24,6 @@ class LockTests : XCTestCase {
         let _ = Timer(0.3) {
           XCTAssert(current == start)
           current = end
-          Queue.current.resume()
         }
       }
     }
