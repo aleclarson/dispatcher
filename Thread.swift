@@ -33,15 +33,7 @@ public class Thread : Dispatcher {
   /// If the NSThread has been wrapped already, the cached result is used.
   /// Avoid creating and wrapping your own NSThreads in favor of using a serial Queue.
   public class func wrap (thread: NSThread) -> Thread {
-    let id = ObjectIdentifier(thread)
-
-    if let thread = threadCache[id] {
-      return thread
-    }
-
-    let thread = Thread(thread)
-    threadCache[id] = thread
-    return thread
+    return threadCache[ObjectIdentifier(thread)] ?? Thread(thread)
   }
 
 
@@ -58,6 +50,7 @@ public class Thread : Dispatcher {
   private init (_ thread: NSThread) {
     core = thread
     super.init()
+    threadCache[ObjectIdentifier(thread)] = self
   }
 }
 
