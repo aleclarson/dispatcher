@@ -17,7 +17,7 @@ public class Queue : Dispatcher {
 
   public override var isCurrent: Bool { return dispatch_get_specific(&kQueueCurrentKey) == getMutablePointer(self) }
 
-  /// If `true`, this Queue always executes one closure at a time.
+  /// If `true`, this Queue always executes one task at a time.
   public let isSerial: Bool
 
   /// If `true`, this Queue wraps around the main UI queue.
@@ -32,15 +32,22 @@ public class Queue : Dispatcher {
 
   // MARK: Methods
 
-  /// Asynchronously adds your closure to be executed on this queue.
-  /// While your closure executes, other closures cannot execute.
+  /// Asynchronously adds your task to be executed on this queue.
+  /// While your task executes, other tasks cannot execute.
   /// Barriers only work with concurrent queues.
-  public func barrier <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    return _barrier(closure)
+  public func barrier <Out> (job: Job<Void, Out>) -> Job<Void, Out> {
+    assert(!isSerial, "a barrier is pointless on a serial queue")
+    assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
+    dispatch_barrier_async(core) {
+      self._isBlocked.set(true)
+      job.perform()
+      self._isBlocked.set(false)
+    }
+    return job
   }
 
-  public func barrier (closure: Void -> Void) -> Job<Void, Void> {
-    return _barrier(closure)
+  public func barrier (task: Void -> Void) {
+    let _ = barrier(Job(task))
   }
 
   public func suspend () {
@@ -76,12 +83,12 @@ public class Queue : Dispatcher {
 
   // MARK: Class Methods
 
-  /// Creates a new Queue that executes one closure at a time.
+  /// Creates a new Queue that executes one task at a time.
   public class func serial (_ priority: Priority = .Medium) -> Queue {
     return Queue(true, priority)
   }
 
-  /// Creates a new Queue that executes multiple closures at once.
+  /// Creates a new Queue that executes multiple tasks at once.
   public class func concurrent (_ priority: Priority = .Medium) -> Queue {
     return Queue(false, priority)
   }
@@ -153,18 +160,6 @@ public class Queue : Dispatcher {
 
   private func _register () {
     dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)
-  }
-
-  private func _barrier <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    assert(!isSerial, "a barrier is pointless on a serial queue")
-    assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
-    let job = Job(closure)
-    dispatch_barrier_async(core) {
-      self._isBlocked.set(true)
-      job.perform()
-      self._isBlocked.set(false)
-    }
-    return job
   }
 }
 

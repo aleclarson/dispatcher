@@ -1,5 +1,6 @@
 
-/// An abstract superclass for Thread and Queue.
+/// An abstract class that performs jobs.
+/// Thread and Queue subclass this.
 public class Dispatcher {
 
   public class var current: Dispatcher! {
@@ -16,38 +17,35 @@ public class Dispatcher {
 
   /// If this Dispatcher is the current one, the callback is called immediately.
   /// Else, the callback is called synchronously on this Dispatcher.
-  public func sync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
+  public func sync <Out> (job: Job<Void, Out>) -> Job<Void, Out> {
     isCurrent ? job.perform() : Dispatcher.current._block { self._perform(job, false) }
     return job
   }
 
   /// Calls the callback asynchronously on this Queue.
-  /// The Thread you call this from will continue without waiting for your closure to finish.
-  public func async <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
+  /// The Thread you call this from will continue without waiting for your task to finish.
+  public func async <Out> (job: Job<Void, Out>) -> Job<Void, Out> {
     _perform(job, true)
     return job
   }
 
   /// If this Dispatcher is the current Dispatcher, the callback is called immediately.
   /// Else, the callback is called asynchronously on this Dispatcher.
-  public func csync <Out> (closure: Void -> Out) -> Job<Void, Out> {
-    let job = Job(closure)
+  public func csync <Out> (job: Job<Void, Out>) -> Job<Void, Out> {
     isCurrent ? job.perform() : _perform(job, true)
     return job
   }
 
-  public func syncv (closure: Void -> Void) {
-    let _: Job<Void, Void> = sync(closure)
+  public func sync (task: Void -> Void) {
+    let _ = sync(Job(task))
   }
 
-  public func asyncv (closure: Void -> Void) {
-    let _: Job<Void, Void> = async(closure)
+  public func async (task: Void -> Void) {
+    let _ = async(Job(task))
   }
 
-  public func csyncv (closure: Void -> Void) {
-    let _: Job<Void, Void> = csync(closure)
+  public func csync (task: Void -> Void) {
+    let _ = csync(Job(task))
   }
 
 
@@ -66,7 +64,7 @@ public class Dispatcher {
 
   // MARK: Private
 
-  private func _block (closure: Void -> Void) {
+  private func _block (task: Void -> Void) {
 
     _isBlocked.set { isBlocked in
       assert(!isBlocked, "blocking a blocked Dispatcher causes a deadlock")
@@ -75,7 +73,7 @@ public class Dispatcher {
       isBlocked = true
     }
 
-    closure()
+    task()
 
     // Unblock the current Dispatcher
     _isBlocked.set(false)

@@ -1,17 +1,16 @@
 
 public typealias AnyJob = Job<Any,Any>
 
-/// A closure that runs on either a Thread or Queue.
-/// A Job releases itself after performing its closure once.
+/// A Job releases itself after performing its task once.
 public class Job <In, Out> {
 
-  /// Wraps a Job's closure when performed.
+  /// A bridge closure is called when a Job finishes.
   /// The `async`, `sync`, and `barrier` methods of Queue/Thread work perfect here.
-  public typealias Wrapper = (Void -> Void) -> Job<Void, Void>
+  public typealias Bridge = (Void -> Void) -> Void
 
   // MARK: Methods
 
-  /// Performs this Job's closure immediately.
+  /// Performs this Job's task immediately.
   /// If this Job is dependent on another Job, that Job will be performed first.
   public func perform () {
     if let prev = _prev.get {
@@ -26,18 +25,18 @@ public class Job <In, Out> {
     }
   }
 
-  /// Creates a Job that performs your closure when this Job finishes.
-  /// The closure is performed on the current Queue or Thread.
-  public func next <NextOut> (closure: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut>(closure))
+  /// Creates a Job that performs your task when this Job finishes.
+  /// The task is performed on the current Dispatcher.
+  public func next <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
+    return _next(Job<Out, NextOut>(task))
   }
 
-  /// Creates a Job that performs your closure when this Job finishes.
-  /// The closure is performed inside the passed wrapper.
-  /// Try passing `Queue.high.async`.
-  public func next <NextOut> (wrapper: Wrapper, _ closure: Out -> NextOut) -> Job<Out, NextOut> {
+  /// Creates a Job that performs your task when this Job finishes.
+  /// The task is performed inside of the passed bridge closure.
+  /// Try passing `Queue.high.async` for example.
+  public func next <NextOut> (bridge: Bridge, _ task: Out -> NextOut) -> Job<Out, NextOut> {
     return _next(Job<Out, NextOut> {
-      arg, done in let _ = wrapper { done(closure(arg)) }
+      arg, done in bridge { done(task(arg)) }
     })
   }
 
@@ -45,8 +44,8 @@ public class Job <In, Out> {
 
   // MARK: Constructor
 
-  public convenience init (_ closure: In -> Out) {
-    self.init({ arg, done in done(closure(arg))  })
+  public convenience init (_ task: In -> Out) {
+    self.init({ arg, done in done(task(arg))  })
   }
 
 
@@ -61,9 +60,9 @@ public class Job <In, Out> {
 
   // MARK: Private
 
-  private typealias Closure = (In, Out -> Void) -> Void
+  private typealias Task = (In, Out -> Void) -> Void
 
-  private let _closure: Closure
+  private let _task: Task
 
   private var _started = Lock(false)
 
@@ -75,8 +74,8 @@ public class Job <In, Out> {
 
   private let _prev = Lock<AnyJob>() // job you depend on
 
-  private init (_ closure: Closure) {
-    _closure = closure
+  private init (_ work: Task) {
+    _task = work
     _self = self
   }
 
@@ -86,7 +85,7 @@ public class Job <In, Out> {
       assert(!isPerformed, "a Job cannot be started more than once")
       isPerformed = true
     }
-    _closure(args, _finish)
+    _task(args, _finish)
   }
 
   private func _finish (result: Out) {

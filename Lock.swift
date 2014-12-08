@@ -30,7 +30,7 @@ public class Lock<T> {
 
   // MARK: Private
 
-  private let _write: AnyJob.Wrapper
+  private let _write: AnyJob.Bridge
 
   private let _queue: Queue
 
