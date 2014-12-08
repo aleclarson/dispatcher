@@ -1,4 +1,6 @@
 
+import Dispatch
+
 public func once (task: Void -> Void, file: String = __FILE__, line: Int = __LINE__) {
   let id = "\(file)\(line)"
   if onces[id] == nil { return }
