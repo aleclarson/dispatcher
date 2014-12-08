@@ -20,6 +20,7 @@ class LockTests : XCTestCase {
         Timer(0.5) {
           XCTAssert(n)
         }
+        return
       }
     }
 
