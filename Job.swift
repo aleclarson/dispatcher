@@ -62,7 +62,9 @@ public class Job <In, Out> : _Job {
   }
 
   private init (_ task: (In, Out -> Void) -> Void) {
-    super.init(unsafeBitCast(task, _Job.Task.self))
+    super.init({ arg, done in
+      task(arg as In) { done($0 as Out) }
+    })
   }
 }
 
