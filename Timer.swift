@@ -56,7 +56,7 @@ public class Timer {
 
   private var _self: Timer!
 
-  private var _isActive = Lock(true, serial: true)
+  private let _isActive = Lock(true, serial: true)
 
   private var _shouldRepeat = false
 

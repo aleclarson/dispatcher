@@ -165,7 +165,7 @@ public class Queue : Dispatcher {
 }
 
 var kQueueCurrent: Queue! {
-  allocBuiltinQueues()
+  dispatch_once(&kQueueBuiltin) { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground; }
   return objectFromPointer(dispatch_get_specific(&kQueueCurrentKey))
 }
 
@@ -181,7 +181,7 @@ private let kQueueBackground = Queue(.Background)
 
 private var kQueueCurrentKey = 0
 
-private var allocBuiltinQueuesOnce = dispatch_once_t()
+private var kQueueBuiltin = dispatch_once_t()
 
 private func pointerFromObject (object: AnyObject!) -> UnsafeMutablePointer<Void> {
   return object != nil ? UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue())) : UnsafeMutablePointer<Void>.null()
@@ -189,11 +189,4 @@ private func pointerFromObject (object: AnyObject!) -> UnsafeMutablePointer<Void
 
 private func objectFromPointer <T:AnyObject> (pointer: UnsafeMutablePointer<Void>) -> T! {
   return pointer != nil ? Unmanaged<T>.fromOpaque(COpaquePointer(pointer)).takeUnretainedValue() : nil
-}
-
-private func allocBuiltinQueues () {
-  dispatch_once(&allocBuiltinQueuesOnce) {
-    kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground;
-    println("Allocated built-in queues!")
-  }
 }
