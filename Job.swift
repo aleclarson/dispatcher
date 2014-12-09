@@ -9,7 +9,7 @@ public class Job <In, Out> : _Job {
   /// 2. Perform the given synchronous task.
   ///
   public func sync <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut>.sync(task))
+    return _next(Job<Out, NextOut>.sync(task)) as Job<Out, NextOut>
   }
 
   /// 1. Wait until this Job finishes.
@@ -19,14 +19,9 @@ public class Job <In, Out> : _Job {
   /// 3. Perform the given synchronous task.
   ///
   public func sync <NextOut> (dispatcher: Dispatcher, _ task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut>.sync {
-      arg in
-      var out: NextOut!
-      dispatcher.csync {
-        out = task(arg)
-      }
-      return out
-    })
+    return async { arg, done in
+      dispatcher.csync { done(task(arg)) }
+    } as Job<Out, NextOut>
   }
 
   /// 1. Wait until this Job finishes.
@@ -34,7 +29,7 @@ public class Job <In, Out> : _Job {
   /// 2. Perform the given asynchronous task.
   ///
   public func async <NextOut> (task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut>.async(task))
+    return _next(Job<Out, NextOut>.async(task)) as Job<Out, NextOut>
   }
 
   /// 1. Wait until this Job finishes.
@@ -66,72 +61,44 @@ public class Job <In, Out> : _Job {
     return Job(task)
   }
 
-
-
-  // MARK: Private
-
-  private let _task: (In, Out -> Void) -> Void
-
-  private var _self: Job! // retain cycle to stay alive
-
   private init (_ task: (In, Out -> Void) -> Void) {
-    _task = task
-    super.init()
-    _self = self
-  }
-
-  private override func _perform (arg: Any) {
-    _task(arg as In, _finish)
-  }
-
-  private func _finish (result: Out) {
-
-    _result.value = result
-
-    _next.lock { job in
-      if job == nil { return }
-      job._perform(result)
-      job = nil
-    }
-
-    _self = nil
-  }
-
-  private func _next <NextOut> (job: Job<Out,NextOut>) -> Job<Out,NextOut> {
-
-    // Perform the next Job immediately if this Job is already finished.
-    if let result = _result.value { job._perform(result) }
-
-    // Else store the next Job until this Job finishes.
-    else {
-      _next.value = unsafeBitCast(job, _Job.self)
-      job._prev.value = unsafeBitCast(self, _Job.self)
-    }
-
-    return job
+    super.init(unsafeBitCast(task, _Job.Task.self))
   }
 }
 
 public class _Job {
 
-  /// Performs this Job's task immediately.
-  /// If this Job is dependent on another Job, that Job will be performed first.
+  /// 1. Perform the Job this Job depends on, if one exists.
+  ///
+  /// 2. Perform this Job's task.
+  ///
   public func perform () {
     if let prev = _prev.value {
-      if let result = prev._result.value {
-        _perform(result)
-      } else {
-        prev.perform()
-      }
       _prev.value = nil
+      if let result = prev._result.value {
+        _start(result)
+      } else {
+        return prev.perform()
+      }
     } else {
-      _perform(())
+      _start(())
     }
   }
 
 
 
   // MARK: Private
+
+  private typealias Task = (Any, Any -> Void) -> Void
+
+  private let _task: Task
+
+  private var _self: _Job! // retain cycle to stay alive
+
+  private init (_ task: Task) {
+    _task = task
+    _self = self
+  }
 
   private let _result = Lock<Any>(serial: true)
 
@@ -139,8 +106,35 @@ public class _Job {
 
   private let _prev = Lock<_Job>(serial: true) // job you depend on
 
-  private func _perform (arg: Any) {
-    fatalError("Must override.")
+  private func _start (arg: Any) {
+    _task(arg, _finish)
+  }
+
+  private func _finish (result: Any) {
+
+    _result.value = result
+
+    _next.lock { job in
+      if job == nil { return }
+      job._start(result)
+      job = nil
+    }
+
+    _self = nil
+  }
+
+  private func _next (job: _Job) -> _Job {
+
+    // Perform the next Job immediately if this Job is already finished.
+    if let result = _result.value { job._start(result) }
+
+    // Else store the next Job until this Job finishes.
+    else {
+      _next.value = job
+      job._prev.value = self
+    }
+
+    return job
   }
 }
 
