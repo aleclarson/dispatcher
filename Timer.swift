@@ -83,6 +83,6 @@ public class Timer {
   }
 }
 
-let timerQueue = Queue.high
+let timerQueue = Queue.main
 
 var activeTimers = [ObjectIdentifier:Timer]()

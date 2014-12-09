@@ -96,9 +96,7 @@ class TimerTests: XCTestCase {
 
     timer = Timer(Seconds(expectedDelay)) {
       let endTime = CFAbsoluteTimeGetCurrent()
-      actualDelay = endTime - startTime
-      println("actualDelay = \(actualDelay)\n")
-      XCTAssert(actualDelay == expectedDelay)
+      println("{\n  expectedDelay: \(expectedDelay)\n  actualDelay: \(endTime - startTime)\n}")
       e.fulfill()
     }
 
