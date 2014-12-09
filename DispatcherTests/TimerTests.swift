@@ -91,10 +91,10 @@ class TimerTests: XCTestCase {
   func testAccuracy () {
     let e = expectationWithDescription(nil)
     var actualDelay: CFAbsoluteTime!
-    let expectedDelay: CFAbsoluteTime = 0.3
+    let expectedDelay: Seconds = 0.3
     let startTime = CFAbsoluteTimeGetCurrent()
 
-    timer = Timer(Seconds(expectedDelay)) {
+    timer = Timer(expectedDelay) {
       let endTime = CFAbsoluteTimeGetCurrent()
       println("{\n  expectedDelay: \(expectedDelay)\n  actualDelay: \(endTime - startTime)\n}")
       e.fulfill()
