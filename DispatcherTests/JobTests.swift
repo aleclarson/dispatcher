@@ -13,8 +13,7 @@ class JobTests : XCTestCase {
       let _ = Timer(0.1) { XCTAssert(++calls == 2); done() }
     }
 
-    j.async(Queue.high) {
-      (_: Void, done: Void -> Void) in
+    job.async(Queue.high) {
       let _ = Timer(0.1) { XCTAssert(++calls == 3); done() }
     }
 
