@@ -6,18 +6,15 @@ import Dispatcher
 class JobTests : XCTestCase {
 
   func testPerform () {
+
     let e = expectationWithDescription(nil)
+
     var calls = 0
 
-    let job = JobVoid.async { _, done in
+    JobVoid.async { _, done in
       let _ = Timer(0.1) { XCTAssert(++calls == 2); done() }
-    }
+    }.perform()
 
-//    job.async(Queue.high) {
-//      let _ = Timer(0.1) { XCTAssert(++calls == 3); done() }
-//    }
-
-    job.perform()
     XCTAssert(++calls == 1)
 
     waitForExpectationsWithTimeout(0.5, handler: nil)
