@@ -16,6 +16,10 @@ class JobTests : XCTestCase {
         XCTAssert(++calls == 2)
         done()
       }
+    }.sync(Queue.high) { _, done in
+      let _ = Timer(0.5) {
+        XCTAssert(<#expression: @autoclosure () -> BooleanType#>, <#message: String#>)
+      }
     }.perform()
 
     XCTAssert(++calls == 1)

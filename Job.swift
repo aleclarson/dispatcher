@@ -4,29 +4,45 @@ public class Job <In, Out> : _Job {
 
   // MARK: Methods
 
-  /// Perform a synchronous Job after this Job is completed.
+  /// 1. Wait until this Job finishes.
+  ///
+  /// 2. Perform the given synchronous task.
+  ///
   public func sync <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
     return _next(Job<Out, NextOut>.sync(task))
   }
 
-  /// Perform a synchronous Job on the given Dispatcher after this Job is completed.
+  /// 1. Wait until this Job finishes.
+  ///
+  /// 2. Asynchronously jump to the given Dispatcher, unless already on it.
+  ///
+  /// 3. Perform the given synchronous task.
+  ///
   public func sync <NextOut> (dispatcher: Dispatcher, _ task: Out -> NextOut) -> Job<Out, NextOut> {
     return _next(Job<Out, NextOut>.sync {
       arg in
       var out: NextOut!
-      dispatcher.sync {
+      dispatcher.csync {
         out = task(arg)
       }
       return out
     })
   }
 
-  /// Perform an asynchronous Job after this Job is completed.
+  /// 1. Wait until this Job finishes.
+  ///
+  /// 2. Perform the given asynchronous task.
+  ///
   public func async <NextOut> (task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
     return _next(Job<Out, NextOut>.async(task))
   }
 
-  /// Perform an asynchronous Job on the given Dispatcher after this Job is completed.
+  /// 1. Wait until this Job finishes.
+  ///
+  /// 2. Asynchronously jump to the given Dispatcher, even if already on it.
+  ///
+  /// 3. Perform the given asynchronous task.
+  ///
   public func async <NextOut> (dispatcher: Dispatcher, _ task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
     return async {
       arg, done in
