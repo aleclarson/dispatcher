@@ -19,7 +19,7 @@ class JobTests : XCTestCase {
     }
 
     job.sync(Queue.high) { _ in
-      let _ = Timer(0.5) {
+      Timer(0.5) {
         XCTAssert(++calls == 3)
         e.fulfill()
       }
