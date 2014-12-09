@@ -1,76 +1,71 @@
 
-public typealias AnyJob = Job<Any,Any>
-
 /// A Job releases itself after performing its task once.
-public class Job <In, Out> {
-
-  /// A bridge closure is called when a Job finishes.
-  /// The `async`, `sync`, and `barrier` methods of Queue/Thread work perfect here.
-  public typealias Bridge = (Void -> Void) -> Void
+public class Job <In, Out> : _Job {
 
   // MARK: Methods
 
-  /// Performs this Job's task immediately.
-  /// If this Job is dependent on another Job, that Job will be performed first.
-  public func perform () {
-    if let prev = _prev.value {
-      if let result = prev._result.value {
-        _perform(result as In)
-      } else {
-        prev.perform()
+  /// Perform a synchronous Job after this Job is completed.
+  public func sync <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
+    return _next(Job.sync(task))
+  }
+
+  /// Perform a synchronous Job on the given Dispatcher after this Job is completed.
+  public func sync <NextOut> (dispatcher: Dispatcher, _ task: Out -> NextOut) -> Job<Out, NextOut> {
+    return _next(Job.sync {
+      arg in
+      var out: NextOut!
+      dispatcher.sync {
+        out = task(arg)
       }
-      _prev.value = nil
-    } else {
-      _perform(() as In)
-    }
-  }
-
-  /// Creates a Job that performs your task when this Job finishes.
-  /// The task is performed on the current Dispatcher.
-  public func next <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut>(task))
-  }
-
-  /// Creates a Job that performs your task when this Job finishes.
-  /// The task is performed inside of the passed bridge closure.
-  /// Try passing `Queue.high.async` for example.
-  public func next <NextOut> (bridge: Bridge, _ task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job<Out, NextOut> {
-      arg, done in bridge { done(task(arg)) }
+      return out
     })
   }
 
+  /// Perform an asynchronous Job after this Job is completed.
+  public func async <NextOut> (task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
+    return _next(Job.async(task))
+  }
+
+  /// Perform an asynchronous Job on the given Dispatcher after this Job is completed.
+  public func async <NextOut> (dispatcher: Dispatcher, _ task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
+    return async {
+      arg, done in
+      dispatcher.async {
+        task(arg, done)
+      }
+    }
+  }
 
 
-  // MARK: Constructor
 
-  public convenience init (_ task: In -> Out) {
-    self.init({ arg, done in done(task(arg))  })
+  // MARK: Constructors
+
+  /// A synchronous Job must return a result upon completion.
+  public class func sync <In, Out> (task: In -> Out) -> Job<In, Out> {
+    return async { $1(task($0)) }
+  }
+
+  /// An asynchronous Job must call its callback with a result upon completion.
+  public class func async <In, Out> (task: (In, Out -> Void) -> Void) -> Job<In, Out> {
+    return Job<In, Out>(task)
   }
 
 
 
   // MARK: Private
 
-  private typealias Task = (In, Out -> Void) -> Void
-
-  private let _task: Task
+  private let _task: (In, Out -> Void) -> Void
 
   private var _self: Job! // retain cycle to stay alive
 
-  private let _result = Lock<Out>(serial: true)
-
-  private let _next = Lock<AnyJob>(serial: true) // job depends on you
-
-  private let _prev = Lock<AnyJob>(serial: true) // job you depend on
-
-  private init (_ work: Task) {
-    _task = work
+  private init (_ task: (In, Out -> Void) -> Void) {
+    _task = task
+    super.init()
     _self = self
   }
 
-  private func _perform (args: In) {
-    _task(args, _finish)
+  private override func _perform (arg: Any) {
+    _task(arg as In, _finish)
   }
 
   private func _finish (result: Out) {
@@ -93,28 +88,58 @@ public class Job <In, Out> {
 
     // Else store the next Job until this Job finishes.
     else {
-      _next.value = unsafeBitCast(job, AnyJob.self)
-      job._prev.value = unsafeBitCast(self, AnyJob.self)
+      _next.value = unsafeBitCast(job, _Job.self)
+      job._prev.value = unsafeBitCast(self, _Job.self)
     }
 
     return job
   }
+}
 
-  deinit {
-    if true {}
+public class _Job {
+
+  /// Performs this Job's task immediately.
+  /// If this Job is dependent on another Job, that Job will be performed first.
+  public func perform () {
+    if let prev = _prev.value {
+      if let result = prev._result.value {
+        _perform(result)
+      } else {
+        prev.perform()
+      }
+      _prev.value = nil
+    } else {
+      _perform(())
+    }
+  }
+
+
+
+  // MARK: Private
+
+  private let _result = Lock<Any>(serial: true)
+
+  private let _next = Lock<_Job>(serial: true) // job depends on you
+
+  private let _prev = Lock<_Job>(serial: true) // job you depend on
+
+  private func _perform (arg: Any) {
+    fatalError("Must override.")
   }
 }
+
+public typealias JobVoid = Job<Void,Void>
 
 extension Thread {
 
   /// Allows Threads to perform Jobs
   class __Job : NSObject {
 
-    init (_ job: AnyJob) {
+    init (_ job: _Job) {
       self.job = job
     }
 
-    let job: AnyJob
+    let job: _Job
 
     func perform () {
       job.perform()

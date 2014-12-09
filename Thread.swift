@@ -41,7 +41,7 @@ public class Thread : Dispatcher {
   // MARK: Internal
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
-    core.callMethod("perform", target: __Job(unsafeBitCast(job, AnyJob.self)), asynchronous: asynchronous)
+    core.callMethod("perform", target: __Job(unsafeBitCast(job, _Job.self)), asynchronous: asynchronous)
   }
 
 

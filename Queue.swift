@@ -47,7 +47,7 @@ public class Queue : Dispatcher {
   }
 
   public func barrier (task: Void -> Void) {
-    let _ = barrier(Job(task))
+    let _ = barrier(JobVoid.sync(task))
   }
 
   public func suspend () {

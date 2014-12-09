@@ -37,15 +37,15 @@ public class Dispatcher {
   }
 
   public func sync (task: Void -> Void) {
-    let _ = sync(Job(task))
+    let _ = sync(JobVoid.sync(task))
   }
 
   public func async (task: Void -> Void) {
-    let _ = async(Job(task))
+    let _ = async(JobVoid.sync(task))
   }
 
   public func csync (task: Void -> Void) {
-    let _ = csync(Job(task))
+    let _ = csync(JobVoid.sync(task))
   }
 
 
