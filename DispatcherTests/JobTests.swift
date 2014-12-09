@@ -20,6 +20,6 @@ class JobTests : XCTestCase {
 
     XCTAssert(++calls == 1)
 
-    waitForExpectationsWithTimeout(0.5, handler: nil)
+    waitForExpectationsWithTimeout(2, handler: nil)
   }
 }
