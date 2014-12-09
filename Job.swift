@@ -19,9 +19,12 @@ public class Job <In, Out> : _Job {
   /// 3. Perform the given synchronous task.
   ///
   public func sync <NextOut> (dispatcher: Dispatcher, _ task: Out -> NextOut) -> Job<Out, NextOut> {
-    return async { arg, done in
-      dispatcher.csync { done(task(arg)) }
-    } as Job<Out, NextOut>
+    return async {
+      arg, done in
+      dispatcher.csync {
+        done(task(arg))
+      }
+    }
   }
 
   /// 1. Wait until this Job finishes.
@@ -62,8 +65,11 @@ public class Job <In, Out> : _Job {
   }
 
   private init (_ task: (In, Out -> Void) -> Void) {
-    super.init({ arg, done in
-      task(arg as In) { done($0 as Out) }
+    super.init({
+      arg, done in
+      task(arg as In) {
+        done($0 as Out)
+      }
     })
   }
 }
