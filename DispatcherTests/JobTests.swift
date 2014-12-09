@@ -8,7 +8,6 @@ class JobTests : XCTestCase {
   func testPerform () {
     let e = expectationWithDescription(nil)
 
-    Job.
     Job.async {
       Queue.current.suspend()
       Timer(0.5) {
