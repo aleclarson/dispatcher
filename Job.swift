@@ -6,12 +6,12 @@ public class Job <In, Out> : _Job {
 
   /// Perform a synchronous Job after this Job is completed.
   public func sync <NextOut> (task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job.sync(task))
+    return _next(Job<Out, NextOut>.sync(task))
   }
 
   /// Perform a synchronous Job on the given Dispatcher after this Job is completed.
   public func sync <NextOut> (dispatcher: Dispatcher, _ task: Out -> NextOut) -> Job<Out, NextOut> {
-    return _next(Job.sync {
+    return _next(Job<Out, NextOut>.sync {
       arg in
       var out: NextOut!
       dispatcher.sync {
@@ -23,7 +23,7 @@ public class Job <In, Out> : _Job {
 
   /// Perform an asynchronous Job after this Job is completed.
   public func async <NextOut> (task: (Out, NextOut -> Void) -> Void) -> Job<Out, NextOut> {
-    return _next(Job.async(task))
+    return _next(Job<Out, NextOut>.async(task))
   }
 
   /// Perform an asynchronous Job on the given Dispatcher after this Job is completed.
@@ -41,13 +41,13 @@ public class Job <In, Out> : _Job {
   // MARK: Constructors
 
   /// A synchronous Job must return a result upon completion.
-  public class func sync <In, Out> (task: In -> Out) -> Job<In, Out> {
+  public class func sync (task: In -> Out) -> Job<In, Out> {
     return async { $1(task($0)) }
   }
 
   /// An asynchronous Job must call its callback with a result upon completion.
-  public class func async <In, Out> (task: (In, Out -> Void) -> Void) -> Job<In, Out> {
-    return Job<In, Out>(task)
+  public class func async (task: (In, Out -> Void) -> Void) -> Job<In, Out> {
+    return Job(task)
   }
 
 
