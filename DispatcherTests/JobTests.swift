@@ -9,7 +9,7 @@ class JobTests : XCTestCase {
     let e = expectationWithDescription(nil)
     var calls = 0
 
-    let job = JobVoid.async {
+    let job = JobVoid.async { _, done in
       let _ = Timer(0.1) { XCTAssert(++calls == 2); done() }
     }
 
