@@ -17,6 +17,7 @@ class JobTests : XCTestCase {
         done()
       }
     }.sync(Queue.high) { _ in
+      XCTAssert(Queue.high.isCurrent)
       Timer(0.5) {
         XCTAssert(++calls == 3)
         e.fulfill()
