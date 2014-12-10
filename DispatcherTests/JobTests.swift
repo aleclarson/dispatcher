@@ -11,22 +11,18 @@ class JobTests : XCTestCase {
 
     var calls = 0
 
-    let job = JobVoid.async { _, done in
+    JobVoid.async { _, done in
       let _ = Timer(0.5) {
         XCTAssert(++calls == 2)
         done()
       }
-    }
-
-    job.sync(Queue.high) { _ in
+    }.sync(Queue.high) { _ -> Void in
       XCTAssert(Queue.high.isCurrent)
-      let _ = Timer(0.5) {
+      Timer(0.5) {
         XCTAssert(++calls == 3)
         e.fulfill()
       }
-    }
-
-    job.perform()
+    }.perform()
 
     XCTAssert(++calls == 1)
 
