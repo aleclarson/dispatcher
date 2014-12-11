@@ -5,6 +5,10 @@ public func assertMainThread (_ message: String = "") {
   assert(Thread.main.isCurrent, message)
 }
 
+public func assertNotMainThread (_ message: String = "") {
+  assert(!Thread.main.isCurrent, message)
+}
+
 /// Threads are serial by definition.
 /// Queues manage their own Threads.
 public class Thread : Dispatcher {
