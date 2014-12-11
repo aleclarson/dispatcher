@@ -66,7 +66,7 @@ public class Dispatcher {
 
   private func _block (task: Void -> Void) {
 
-    _isBlocked.lock { isBlocked in
+    _isBlocked.write { isBlocked in
       assert(!isBlocked, "blocking a blocked Dispatcher causes a deadlock")
 
       isBlocked = true // Block this Dispatcher

@@ -20,7 +20,7 @@ class LockTests : XCTestCase {
     let current = Lock(start)
 
     Queue.medium.async {
-      current.lock { current in
+      current.write { current in
         let _ = Timer(0.3) {
           XCTAssert(current == start)
           current = end

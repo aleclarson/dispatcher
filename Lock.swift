@@ -21,8 +21,10 @@ public class Lock <T> {
 
   /// Locks the value for the duration of the passed block.
   /// This allows for both reading and writing in a single transaction.
-  public func lock (block: (inout T!) -> Void) {
+  public func write (block: (inout T!) -> Void) -> T! {
+    var value: T!
     _write { block(&self._value) }
+    return value
   }
 
   public init (_ defaultValue: T! = nil, serial: Bool = false) {

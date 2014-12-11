@@ -122,7 +122,7 @@ public class _Job {
 
     _result.value = result
 
-    _next.lock { job in
+    _next.write { job in
       if job == nil { return }
       job._start(result)
       job = nil
