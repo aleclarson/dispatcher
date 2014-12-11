@@ -5,23 +5,70 @@ import Dispatcher
 
 class QueueTests: XCTestCase {
 
+  // +Queue.main
+  func testQueueMain () {
+    XCTAssert(Queue.main.isMain)
+  }
+
+  // -Queue.isCurrent
   func testQueueIsCurrent () {
-    XCTAssert(!Queue.medium.isCurrent)
-    Queue.medium.sync { XCTAssert(Queue.medium.isCurrent) }
+    let e = expectationWithDescription(nil)
+
+    Queue.medium.async {
+      XCTAssert(Queue.medium.isCurrent)
+
+      Queue.main.sync {
+        XCTAssert(Queue.main.isCurrent)
+
+        e.fulfill()
+      }
+    }
+
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 
+  // +Queue.current
   func testQueueCurrent () {
-    XCTAssert(Queue.main.isCurrent)
-    Queue.medium.sync { XCTAssert(Queue.main !== Queue.current) }
+    XCTAssert(Thread.main.isCurrent)
+
+    let e = expectationWithDescription(nil)
+    let main = Queue.main
+    let current = Queue.current
+    XCTAssert(main === current)
+
+    Queue.medium.async {
+      XCTAssert(Queue.medium === Queue.current)
+
+      Queue.main.async {
+        e.fulfill()
+      }
+    }
+
+    waitForExpectationsWithTimeout(1, handler: nil)
   }
 
+  // +Queue.concurrent(_:)
+  func testConcurrentQueue () {
+
+    let n = Lock(0)
+
+    let queue = Queue.concurrent(.High)
+
+//    queue.async {
+  }
+
+  // +Queue.serial(_:)
   func testSerialQueue () {
 
     var n = 0
 
     let queue = Queue.serial()
 
-    queue.async { XCTAssert(++n == 1) }
+    queue.async {
+      let _ = Timer(0.5) {
+        XCTAssert(++n == 1)
+      }
+    }
 
     queue.async { XCTAssert(++n == 2) }
 

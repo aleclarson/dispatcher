@@ -38,12 +38,15 @@ class TimerTests: XCTestCase {
 
   func testFire () {
   
-    timer = Timer(1) { self.calls += 1 }
+    timer = Timer(1) {
+      self.calls += 1
+      println("calls = \(self.calls)")
+    }
 
-    timer.fire()
+    timer?.fire()
+    XCTAssert(calls == 1)
 
-    timer.fire() // Should not do anything.
-
+    timer?.fire() // Should not do anything.
     XCTAssert(calls == 1)
   }
 
@@ -71,11 +74,6 @@ class TimerTests: XCTestCase {
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
-  func testUnretainedTimer () {
-    Timer(0.1) { self.calls += 1 }
-    timer = Timer(0.2) { XCTAssert(self.calls == 0) }
-  }
-
   func testThreadSafety () {
     let expectation = expectationWithDescription(nil)
 
@@ -93,16 +91,13 @@ class TimerTests: XCTestCase {
   func testAccuracy () {
     let e = expectationWithDescription(nil)
     var actualDelay: CFAbsoluteTime!
-    let expectedDelay: CFAbsoluteTime = 0.3
+    let expectedDelay: Seconds = 0.3
     let startTime = CFAbsoluteTimeGetCurrent()
 
-    timer = Timer(Seconds(expectedDelay)) {
-      Queue.medium.async {
-        actualDelay = CFAbsoluteTimeGetCurrent() - startTime
-        println("actualDelay = \(actualDelay)")
-        XCTAssert(actualDelay == expectedDelay)
-        e.fulfill()
-      }
+    timer = Timer(expectedDelay) {
+      let endTime = CFAbsoluteTimeGetCurrent()
+      println("{\n  expectedDelay: \(expectedDelay)\n  actualDelay: \(endTime - startTime)\n}")
+      e.fulfill()
     }
 
     waitForExpectationsWithTimeout(1, handler: nil)

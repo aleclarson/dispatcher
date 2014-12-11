@@ -1,6 +1,14 @@
 
 import Foundation
 
+public func assertMainThread (_ message: String = "") {
+  assert(Thread.main.isCurrent, message)
+}
+
+public func assertNotMainThread (_ message: String = "") {
+  assert(!Thread.main.isCurrent, message)
+}
+
 /// Threads are serial by definition.
 /// Queues manage their own Threads.
 public class Thread : Dispatcher {
@@ -33,15 +41,7 @@ public class Thread : Dispatcher {
   /// If the NSThread has been wrapped already, the cached result is used.
   /// Avoid creating and wrapping your own NSThreads in favor of using a serial Queue.
   public class func wrap (thread: NSThread) -> Thread {
-    let id = ObjectIdentifier(thread)
-
-    if let thread = threadCache[id] {
-      return thread
-    }
-
-    let thread = Thread(thread)
-    threadCache[id] = thread
-    return thread
+    return threadCache[ObjectIdentifier(thread)] ?? Thread(thread)
   }
 
 
@@ -49,7 +49,7 @@ public class Thread : Dispatcher {
   // MARK: Internal
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
-    core.callMethod("perform", target: __Job(unsafeBitCast(job, AnyJob.self)), asynchronous: asynchronous)
+    core.callMethod("perform", target: __Job(unsafeBitCast(job, _Job.self)), asynchronous: asynchronous)
   }
 
 
@@ -58,6 +58,7 @@ public class Thread : Dispatcher {
   private init (_ thread: NSThread) {
     core = thread
     super.init()
+    threadCache[ObjectIdentifier(thread)] = self
   }
 }
 

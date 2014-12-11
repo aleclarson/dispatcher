@@ -9,13 +9,13 @@ public class Queue : Dispatcher {
 
   /// This can only be set if this Queue is serial and created by you.
   public var priority: Priority {
-    willSet {
+    didSet {
       assert(!isBuiltin, "not allowed to set the priority of a built-in queue")
-      dispatch_set_target_queue(core, newValue.builtin.core)
+      _didSetPriority()
     }
   }
 
-  public override var isCurrent: Bool { return kQueueCurrent == getMutablePointer(self) }
+  public override var isCurrent: Bool { return kQueueCurrent === self }
 
   /// If `true`, this Queue always executes one task at a time.
   public let isSerial: Bool
@@ -39,15 +39,15 @@ public class Queue : Dispatcher {
     assert(!isSerial, "a barrier is pointless on a serial queue")
     assert(!isBuiltin, "a barrier cannot be used on a built-in queue")
     dispatch_barrier_async(core) {
-      self._isBlocked.set(true)
+      self._isBlocked.value = true // Block this queue
       job.perform()
-      self._isBlocked.set(false)
+      self._isBlocked.value = false // Unblock this queue
     }
     return job
   }
 
   public func barrier (task: Void -> Void) {
-    let _ = barrier(Job(task))
+    let _ = barrier(JobVoid.sync(task))
   }
 
   public func suspend () {
@@ -63,10 +63,7 @@ public class Queue : Dispatcher {
   // MARK: Class Variables
 
   /// Returns `nil` if the current Thread was not created by a Queue; normally this doesn't happen.
-  public override class var current: Queue! {
-    let queue = kQueueCurrent
-    return queue != nil ? Unmanaged<Queue>.fromOpaque(COpaquePointer(queue)).takeUnretainedValue() : nil
-  }
+  public override class var current: Queue! { return kQueueCurrent }
 
   public class var main: Queue { return kQueueMain }
 
@@ -131,26 +128,27 @@ public class Queue : Dispatcher {
 
   /// Initializes one of Apple's built-in queues.
   init (_ priority: Priority) {
-    self.priority = priority
     isBuiltin = true
     isSerial = priority == .Main
     core = isSerial ? dispatch_get_main_queue() : dispatch_get_global_queue(priority.core, 0)
+    self.priority = priority
     super.init()
     _register()
   }
 
   /// Initializes a custom queue.
   init (_ serial: Bool, _ priority: Priority) {
-    self.priority = priority
     isBuiltin = false
     isSerial = serial
-    core = dispatch_queue_create(nil, serial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
+    core = dispatch_queue_create(nil, isSerial ? DISPATCH_QUEUE_SERIAL : DISPATCH_QUEUE_CONCURRENT)
+    self.priority = priority
     super.init()
+    _didSetPriority()
     _register()
   }
 
   override func _perform <In, Out> (job: Job<In, Out>, _ asynchronous: Bool) {
-    (asynchronous ? dispatch_async : dispatch_sync)(core, job.perform)
+    (asynchronous ? dispatch_async : dispatch_sync)(core) { job.perform() }
   }
 
 
@@ -158,17 +156,17 @@ public class Queue : Dispatcher {
   // MARK: Private
 
   private func _register () {
-    dispatch_queue_set_specific(core, &kQueueCurrentKey, getMutablePointer(self), nil)
+    dispatch_queue_set_specific(core, &kQueueCurrentKey, pointerFromObject(self), nil)
+  }
+
+  private func _didSetPriority () {
+    dispatch_set_target_queue(core, priority.builtin.core)
   }
 }
 
-var kQueueCurrent: UnsafeMutablePointer<Void> {
-  dispatch_once(&kQueueBuiltin) { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground }
-  return dispatch_get_specific(&kQueueCurrentKey)
-}
-
-func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
+var kQueueCurrent: Queue! {
+  dispatch_once(&kQueueBuiltin) { kQueueMain; kQueueHigh; kQueueMedium; kQueueLow; kQueueBackground; }
+  return objectFromPointer(dispatch_get_specific(&kQueueCurrentKey))
 }
 
 private let kQueueMain = Queue(.Main)
@@ -184,3 +182,11 @@ private let kQueueBackground = Queue(.Background)
 private var kQueueCurrentKey = 0
 
 private var kQueueBuiltin = dispatch_once_t()
+
+private func pointerFromObject (object: AnyObject!) -> UnsafeMutablePointer<Void> {
+  return object != nil ? UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue())) : UnsafeMutablePointer<Void>.null()
+}
+
+private func objectFromPointer <T:AnyObject> (pointer: UnsafeMutablePointer<Void>) -> T! {
+  return pointer != nil ? Unmanaged<T>.fromOpaque(COpaquePointer(pointer)).takeUnretainedValue() : nil
+}

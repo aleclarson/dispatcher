@@ -23,6 +23,8 @@
 		11A4343F1A33827A00D155DB /* Dispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 11A4343E1A33825500D155DB /* Dispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		11A434411A33AFAF00D155DB /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434401A33AFAF00D155DB /* TestHelpers.swift */; };
 		11A434451A33BCEF00D155DB /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A434431A33BBE300D155DB /* Lock.swift */; };
+		11F93BBE1A36070D00ABBD4E /* LockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F93BBD1A36070D00ABBD4E /* LockTests.swift */; };
+		11FCFA851A37419600D5CD93 /* JobTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FCFA841A37419500D5CD93 /* JobTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +58,8 @@
 		11A4343E1A33825500D155DB /* Dispatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dispatcher.h; sourceTree = SOURCE_ROOT; };
 		11A434401A33AFAF00D155DB /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		11A434431A33BBE300D155DB /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = SOURCE_ROOT; };
+		11F93BBD1A36070D00ABBD4E /* LockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockTests.swift; sourceTree = "<group>"; };
+		11FCFA841A37419500D5CD93 /* JobTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +121,9 @@
 			isa = PBXGroup;
 			children = (
 				1123A3B719F1404F00BF890F /* QueueTests.swift */,
+				11F93BBD1A36070D00ABBD4E /* LockTests.swift */,
 				1183135019F354C4002C2F0A /* TimerTests.swift */,
+				11FCFA841A37419500D5CD93 /* JobTests.swift */,
 				1183135219F35B54002C2F0A /* WorkTests.swift */,
 				11A434401A33AFAF00D155DB /* TestHelpers.swift */,
 			);
@@ -275,6 +281,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11F93BBE1A36070D00ABBD4E /* LockTests.swift in Sources */,
+				11FCFA851A37419600D5CD93 /* JobTests.swift in Sources */,
 				1183135319F35B54002C2F0A /* WorkTests.swift in Sources */,
 				1123A3B819F1404F00BF890F /* QueueTests.swift in Sources */,
 				1183135119F354C4002C2F0A /* TimerTests.swift in Sources */,
