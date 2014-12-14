@@ -84,9 +84,14 @@ let messageCount = Lock<Int>()
 
 messageCount.value = 0
 
-messageCount.lock { count in
-  count = count + 1
+messageCount.lock { 
+  count in
+  if count > 0 {
+    count = count - 1
+  }
 }
+
+messageCount.map { $0 + 1 }
 ```
 
 -
