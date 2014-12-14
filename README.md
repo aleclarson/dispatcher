@@ -1,15 +1,48 @@
 <img src="http://i.imgur.com/sEM1zbl.jpg"/>
 
-**Queue**: multi-threaded dispatcher
-**Thread**: single-threaded dispatcher
-**Dispatcher**: serial/concurrent task execution
+-
 
-**Job**: task chaining
-**Lock**: resource synchronization
-**Timer**: delayed closures
-**Work**: task groups
+###Queue
 
-#### Installation
+A `Queue` performs closures either serially (one at a time) or concurrently (many at a time).
+
+[**Learn more**]()
+
+-
+
+###Job
+
+A `Job` is an asynchronous task with the ability to depend on another `Job`. 
+
+[**Learn more**]()
+
+-
+
+###Contract
+
+A `Contract` tracks the completion of a group of asynchronous tasks. 
+
+[**Learn more**]()
+
+-
+
+###Lock
+
+A `Lock` wraps around a value to make it thread-safe. 
+
+[**Learn more**]()
+
+-
+
+###Timer
+
+A `Timer` performs a closure on the current thread after delaying. 
+
+[**Learn more**]()
+
+---
+
+### Installation
 
 **Dispatcher** is not yet available on CocoaPods.
 
