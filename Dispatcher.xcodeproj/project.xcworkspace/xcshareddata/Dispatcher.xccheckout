@@ -11,17 +11,17 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>5DEF730493535ED3D6F3B4891E5E1F17DAB0C8E1</key>
-		<string>github.com:aleclarson/swift-dispatcher.git</string>
+		<string>https://github.com/aleclarson/dispatcher.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Dispatcher/Dispatcher.xcodeproj</string>
+	<string>Dispatcher.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>5DEF730493535ED3D6F3B4891E5E1F17DAB0C8E1</key>
-		<string>../../..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:aleclarson/swift-dispatcher.git</string>
+	<string>https://github.com/aleclarson/dispatcher.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -34,7 +34,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>5DEF730493535ED3D6F3B4891E5E1F17DAB0C8E1</string>
 			<key>IDESourceControlWCCName</key>
-			<string>swift-dispatcher</string>
+			<string>dispatcher</string>
 		</dict>
 	</array>
 </dict>
