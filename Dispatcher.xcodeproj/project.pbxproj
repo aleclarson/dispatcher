@@ -10,7 +10,6 @@
 		1123A3B819F1404F00BF890F /* DispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3B719F1404F00BF890F /* DispatcherTests.swift */; };
 		1123A3CD19F14B3400BF890F /* Dispatcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1123A3A719F1404E00BF890F /* Dispatcher.framework */; };
 		1123A3CF19F14B3F00BF890F /* Dispatcher.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1123A3A719F1404E00BF890F /* Dispatcher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1123A3D919F1532F00BF890F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1123A3D719F1532F00BF890F /* Info.plist */; };
 		1123A3DD19F1535900BF890F /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DA19F1535900BF890F /* DispatchQueue.swift */; };
 		1123A3DE19F1535900BF890F /* DispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DB19F1535900BF890F /* DispatchGroup.swift */; };
 		1123A3DF19F1535900BF890F /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1123A3DC19F1535900BF890F /* Dispatcher.swift */; };
@@ -220,7 +219,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1123A3D919F1532F00BF890F /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
