@@ -10,6 +10,8 @@
 
 #### [Timer](https://github.com/aleclarson/dispatcher/wiki/Timer)
 
+[![Thank me!](http://img.shields.io/gratipay/aleclarson.svg "Thank me!")](https://gratipay.com/aleclarson/)
+
 ---
 
 #### Installation
