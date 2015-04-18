@@ -2,17 +2,23 @@
 
 **Dispatcher** eases the pain of using [Grand Central Dispatch](https://developer.apple.com/library/mac/documentation/performance/reference/gcd_libdispatch_ref/Reference/reference.html) by introducing 4 new Swift classes.
 
-#### [Dispatcher](https://github.com/aleclarson/dispatcher/wiki/Dispatcher)
+- [Dispatcher](https://github.com/aleclarson/dispatcher/wiki/Dispatcher)
 
-#### [Queue](https://github.com/aleclarson/dispatcher/wiki/Queue)
+- [Queue](https://github.com/aleclarson/dispatcher/wiki/Queue)
 
-#### [Group](https://github.com/aleclarson/dispatcher/wiki/Group)
+- [Group](https://github.com/aleclarson/dispatcher/wiki/Group)
 
-#### [Timer](https://github.com/aleclarson/dispatcher/wiki/Timer)
+- [Timer](https://github.com/aleclarson/dispatcher/wiki/Timer)
 
 [![Thank me!](http://img.shields.io/gratipay/aleclarson.svg "Thank me!")](https://gratipay.com/aleclarson/)
 
----
+-
+
+#### Requirements
+
+- Swift 1.2+
+
+-
 
 #### Installation
 
