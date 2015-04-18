@@ -28,7 +28,7 @@ class DispatcherTests: XCTestCase {
   func testSyncInSync () {
     var n = 0
 
-    gcd.main.sync(gcd.main.sync(n += 1))
+    gcd.main.sync({gcd.main.sync({n += 1})})
 
     XCTAssert(n == 1)
   }
@@ -36,7 +36,7 @@ class DispatcherTests: XCTestCase {
   func testAsyncInAsync () {
     let expectation = expectationWithDescription(nil)
 
-    gcd.main.async(gcd.main.async(expectation.fulfill()))
+    gcd.main.async({gcd.main.async({expectation.fulfill()})})
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }
