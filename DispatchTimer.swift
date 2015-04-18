@@ -6,10 +6,6 @@ public typealias Timer = DispatchTimer
 
 public class DispatchTimer {
 
-  public convenience init (_ delay: CGFloat, _ callback: @autoclosure () -> Void) {
-    self.init(delay, { callback() })
-  }
-  
   public convenience init (_ delay: CGFloat, _ callback: Void -> Void) {
     self.init(delay, 0, callback)
   }
@@ -23,10 +19,11 @@ public class DispatchTimer {
       return
     }
 
-    callbackQueue = gcd.current
-    queue = gcd.serial()
+    self.callbackQueue = gcd.current
+    self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue.dispatch_queue)
+    
     if !gcd.main.isCurrent { dispatch_set_target_queue(queue.dispatch_queue, gcd.current.dispatch_queue) }
-    timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue.dispatch_queue)
+    
     let delay_ns = delay * CGFloat(NSEC_PER_SEC)
     let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay_ns))
     dispatch_source_set_timer(timer, time, UInt64(delay_ns), UInt64(tolerance * CGFloat(NSEC_PER_SEC)))
@@ -34,15 +31,11 @@ public class DispatchTimer {
     dispatch_resume(timer)
   }
 
-
-
   // MARK: Read-only
 
   public let tolerance: CGFloat
   
   public let callback: Void -> Void
-
-
 
   // MARK: Instance methods
 
@@ -65,17 +58,15 @@ public class DispatchTimer {
   
   public func stop () {
     if OSAtomicTestAndSetBarrier(7, &invalidated) { return }
-    queue.sync(dispatch_source_cancel(timer))
+    queue.sync({dispatch_source_cancel(self.timer)})
     if isAutoReleased { autoReleasedTimers[ObjectIdentifier(self)] = nil }
   }
 
-
-
   // MARK: Internal
 
-  let timer: dispatch_source_t!
+  var timer: dispatch_source_t!
 
-  let queue: DispatchQueue!
+  let queue: DispatchQueue = gcd.serial()
 
   var callbackQueue: DispatchQueue!
 

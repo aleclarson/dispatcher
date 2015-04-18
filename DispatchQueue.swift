@@ -7,7 +7,7 @@ public class DispatchQueue {
 
   // MARK: Public
   
-  public let isConcurrent = false
+  public let isConcurrent: Bool
 
   public var isCurrent: Bool { return dispatch_get_specific(&kCurrentQueue) == getMutablePointer(self) }
 
@@ -34,14 +34,6 @@ public class DispatchQueue {
     }
   }
 
-  public func async (callback: @autoclosure () -> Void) {
-    async { callback() }
-  }
-
-  public func sync (callback: @autoclosure () -> Void) {
-    sync { callback() }
-  }
-
   public let dispatch_queue: dispatch_queue_t
 
 
@@ -49,6 +41,7 @@ public class DispatchQueue {
   // MARK: Internal
 
   init (_ queue: dispatch_queue_t) {
+    isConcurrent = false
     dispatch_queue = queue
     remember()
   }
@@ -73,5 +66,5 @@ public class DispatchQueue {
 var kCurrentQueue = 0
 
 func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
+  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue))
 }
