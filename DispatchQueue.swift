@@ -66,5 +66,5 @@ public class DispatchQueue {
 var kCurrentQueue = 0
 
 func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-  return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue))
+  return UnsafeMutablePointer<Void>(bitPattern: Int(ObjectIdentifier(object).uintValue))
 }

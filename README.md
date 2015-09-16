@@ -16,7 +16,7 @@
 
 #### Requirements
 
-- Swift 1.2+
+- Swift 2.0+
 
 -
 

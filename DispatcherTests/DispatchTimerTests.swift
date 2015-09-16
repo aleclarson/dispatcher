@@ -16,7 +16,7 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testDispatchTimer () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(1, expectation.fulfill)
 
@@ -24,7 +24,7 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testCallbackQueue () {
-    let e = expectationWithDescription(nil)
+    let e = expectationWithDescription("")
     
     gcd.async {
       self.timer = DispatchTimer(0.1) {
@@ -48,31 +48,31 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testFiniteRepeatingTimer () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(0.25) {
       if ++self.calls == 2 { expectation.fulfill() }
     }
 
-    timer.repeat(2)
+    timer.doRepeat(2)
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
   func testInfiniteRepeatingTimer () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(0.1) {
       if ++self.calls == 5 { expectation.fulfill() }
     }
 
-    timer.repeat()
+    timer.doRepeat()
 
     waitForExpectationsWithTimeout(1, handler: nil)
   }
 
   func testAutoClosureTimer () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(0.1, {expectation.fulfill()})
 
@@ -80,7 +80,7 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testAutoReleasedTimer () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     DispatchTimer(0.5, {expectation.fulfill()}).autorelease()
 
@@ -88,12 +88,12 @@ class DispatchTimerTests: XCTestCase {
   }
 
   func testUnretainedTimer () {
-    DispatchTimer(0.1, {self.calls += 1})
+    let _ = DispatchTimer(0.1, {self.calls += 1})
     timer = DispatchTimer(0.2, {XCTAssert(self.calls == 0)})
   }
 
   func testThreadSafety () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     gcd.async {
       self.timer = Timer(0.5, gcd.main.sync({expectation.fulfill()}))

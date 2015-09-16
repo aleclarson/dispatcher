@@ -183,6 +183,8 @@
 		1123A32E19F13F6700BF890F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = Larson;
 				TargetAttributes = {

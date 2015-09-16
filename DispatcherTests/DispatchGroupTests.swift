@@ -13,7 +13,7 @@ class DispatchGroupTests: XCTestCase {
   }
 
   func testDispatchGroup () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     group = DispatchGroup()
 
@@ -27,7 +27,7 @@ class DispatchGroupTests: XCTestCase {
   }
 
   func testThreadSafety () {
-    let expectation = expectationWithDescription(nil)
+    let expectation = expectationWithDescription("")
 
     group = DispatchGroup(2)
 
