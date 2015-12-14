@@ -39,7 +39,7 @@ public class DispatchTimer {
 
   // MARK: Instance methods
 
-  public func doRepeat (_ times: UInt! = nil) {
+  public func doRepeat (times: UInt! = nil) {
     isRepeating = true
     repeatsLeft = times != nil ? Int(times) : -1
   }
