@@ -52,7 +52,9 @@ public class DispatchTimer {
   public func fire () {
     if OSAtomicAnd32OrigBarrier(1, &invalidated) == 1 { return }
     callbackQueue.sync(callback)
-    if isRepeating && repeatsLeft > 0 { repeatsLeft-- }
+    if isRepeating && repeatsLeft > 0 {
+      repeatsLeft -= 1
+    }
     if !isRepeating || repeatsLeft == 0 { stop() }
   }
   

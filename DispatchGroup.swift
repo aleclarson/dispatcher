@@ -27,14 +27,14 @@ public class DispatchGroup {
 
 public prefix func ++ (group: DispatchGroup) {
   objc_sync_enter(group)
-  group.tasks++
+  group.tasks += 1
   dispatch_group_enter(group.dispatch_group)
   objc_sync_exit(group)
 }
 
 public prefix func -- (group: DispatchGroup) {
   objc_sync_enter(group)
-  group.tasks--
+  group.tasks -= 1
   dispatch_group_leave(group.dispatch_group)
   objc_sync_exit(group)
 }

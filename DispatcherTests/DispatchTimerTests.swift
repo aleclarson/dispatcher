@@ -51,7 +51,10 @@ class DispatchTimerTests: XCTestCase {
     let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(0.25) {
-      if ++self.calls == 2 { expectation.fulfill() }
+      self.calls += 1
+      if self.calls == 2 {
+        expectation.fulfill()
+      }
     }
 
     timer.doRepeat(2)
@@ -63,7 +66,10 @@ class DispatchTimerTests: XCTestCase {
     let expectation = expectationWithDescription("")
 
     timer = DispatchTimer(0.1) {
-      if ++self.calls == 5 { expectation.fulfill() }
+      self.calls += 1
+      if self.calls == 5 {
+        expectation.fulfill()
+      }
     }
 
     timer.doRepeat()

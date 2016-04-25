@@ -20,9 +20,18 @@ class DispatcherTests: XCTestCase {
   func testSerialDispatchQueue () {
     var calls = 0
     let queue = gcd.serial()
-    queue.async { XCTAssert(++calls == 1) }
-    queue.async { XCTAssert(++calls == 2) }
-    queue.sync { XCTAssert(++calls == 3) }
+    queue.async {
+      calls += 1
+      XCTAssert(calls == 1)
+    }
+    queue.async {
+      calls += 1
+      XCTAssert(calls == 2)
+    }
+    queue.sync {
+      calls += 1
+      XCTAssert(calls == 3)
+    }
   }
 
   func testSyncInSync () {
